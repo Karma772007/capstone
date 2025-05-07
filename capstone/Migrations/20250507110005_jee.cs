@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace capstone.Migrations
 {
     /// <inheritdoc />
-    public partial class m : Migration
+    public partial class jee : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -108,29 +108,6 @@ namespace capstone.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Validationreports",
-                columns: table => new
-                {
-                    ValidationID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MachineID = table.Column<int>(type: "int", nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ValidationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ValidationMethod = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Validationreports", x => x.ValidationID);
-                    table.ForeignKey(
-                        name: "FK_Validationreports_Machines_MachineID",
-                        column: x => x.MachineID,
-                        principalTable: "Machines",
-                        principalColumn: "MachineId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Workorders",
                 columns: table => new
                 {
@@ -164,11 +141,6 @@ namespace capstone.Migrations
                 column: "MachineID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Validationreports_MachineID",
-                table: "Validationreports",
-                column: "MachineID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Workorders_MachineID",
                 table: "Workorders",
                 column: "MachineID");
@@ -188,9 +160,6 @@ namespace capstone.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Validationreports");
 
             migrationBuilder.DropTable(
                 name: "Workorders");

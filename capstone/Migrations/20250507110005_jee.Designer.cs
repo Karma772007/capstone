@@ -12,8 +12,8 @@ using capstone.data;
 namespace capstone.Migrations
 {
     [DbContext(typeof(Projectcontext))]
-    [Migration("20250506224618_m")]
-    partial class m
+    [Migration("20250507110005_jee")]
+    partial class jee
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,39 +182,6 @@ namespace capstone.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("capstone.Models.ValidationReport", b =>
-                {
-                    b.Property<int>("ValidationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ValidationID"));
-
-                    b.Property<string>("Comments")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MachineID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ValidationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ValidationMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ValidationID");
-
-                    b.HasIndex("MachineID");
-
-                    b.ToTable("Validationreports");
-                });
-
             modelBuilder.Entity("capstone.Models.WorkOrder", b =>
                 {
                     b.Property<int>("WorkOrderID")
@@ -269,17 +236,6 @@ namespace capstone.Migrations
                     b.Navigation("Machine");
                 });
 
-            modelBuilder.Entity("capstone.Models.ValidationReport", b =>
-                {
-                    b.HasOne("capstone.Models.Machine", "Machine")
-                        .WithMany("ValidationReports")
-                        .HasForeignKey("MachineID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Machine");
-                });
-
             modelBuilder.Entity("capstone.Models.WorkOrder", b =>
                 {
                     b.HasOne("capstone.Models.Machine", "Machine")
@@ -296,8 +252,6 @@ namespace capstone.Migrations
                     b.Navigation("CleaningLogs");
 
                     b.Navigation("MaintenanceHistory");
-
-                    b.Navigation("ValidationReports");
 
                     b.Navigation("WorkOrders");
                 });

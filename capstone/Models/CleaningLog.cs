@@ -6,6 +6,7 @@ namespace capstone.Models
     {
         [Key]
         public int LogID { get; set; }
+
         public int MachineID { get; set; }
         public Machine Machine { get; set; }
         public DateTime CleaningDate { get; set; }
