@@ -1,0 +1,1337 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnel Management | Admin Dashboard – SafeCycle</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Sidebar Styles */
+        :root {
+            --primary-color: #4da6ff;
+            --primary-dark: #0066cc;
+            --primary-light: #e6f2ff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --sidebar-width: 260px;
+            --sidebar-width-collapsed: 70px;
+            --topbar-height: 60px;
+            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --transition-speed: 0.3s;
+        }
+
+        /* Layout Structure */
+        .layout-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width var(--transition-speed);
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+
+            .sidebar.collapsed {
+                width: var(--sidebar-width-collapsed);
+            }
+
+        .sidebar-brand {
+            height: var(--topbar-height);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+            .sidebar-brand h1 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+        .sidebar-brand-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-heading {
+            color: var(--secondary-color);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 15px 20px 5px;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+            .sidebar-item i {
+                min-width: 30px;
+                font-size: 1.1rem;
+            }
+
+        .sidebar-item-text {
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity var(--transition-speed);
+        }
+
+        .collapsed .sidebar-item-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .sidebar-item.active {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .sidebar-item .badge {
+            position: absolute;
+            right: 20px;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 10px;
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--primary-light);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+            .sidebar-toggle:hover {
+                background-color: var(--primary-color);
+                color: var(--white);
+            }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left var(--transition-speed);
+        }
+
+        .sidebar.collapsed + .main-content {
+            margin-left: var(--sidebar-width-collapsed);
+        }
+
+        /* Responsive Styles for Sidebar */
+        @@media (max-width: 768px) {
+            .sidebar
+
+        {
+            transform: translateX(-100%);
+            position: fixed;
+            z-index: 1001;
+        }
+
+        .sidebar.mobile-active {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+        }
+
+        .menu-toggle {
+            display: block;
+        }
+
+        }
+
+        :root {
+            --primary-color: #4da6ff;
+            --light-grey: #f8f9fa;
+            --dark-grey: #343a40;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .page-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--dark-grey);
+            font-weight: 500;
+        }
+
+            .nav-tabs .nav-link.active {
+                color: var(--primary-color);
+                border-bottom: 2px solid var(--primary-color);
+            }
+
+        .dashboard-card {
+            background-color: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+            .dashboard-card:hover {
+                transform: translateY(-3px);
+            }
+
+        .card-icon {
+            background-color: rgba(77, 166, 255, 0.1);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .card-title {
+            color: var(--dark-grey);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .card-value {
+            color: var(--dark-grey);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .filters-panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .table-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .table th {
+            font-weight: 500;
+            color: var(--dark-grey);
+            border-top: none;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .badge-active {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            padding: 0.4rem 0.7rem;
+        }
+
+        .badge-inactive {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            padding: 0.4rem 0.7rem;
+        }
+
+        .action-icon {
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+            .btn-primary:hover {
+                background-color: #3d96e8;
+                border-color: #3d96e8;
+            }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+            .btn-outline-primary:hover {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-grey);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .close {
+            color: white;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .pagination .page-link {
+            color: var(--primary-color);
+        }
+
+        /* Custom toggle switch */
+        .form-switch .form-check-input:checked {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-recycle sidebar-brand-icon"></i>
+                <h1 class="sidebar-brand-text">SafeCycle</h1>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-heading">Main</div>
+                <a href="./admindashboard.html" class="sidebar-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span class="sidebar-item-text">Dashboard</span>
+                </a>
+                <a href="./machineManagmentAdmin.html" class="sidebar-item">
+                    <i class="fas fa-cogs"></i>
+                    <span class="sidebar-item-text">Machine Management</span>
+                    <span class="badge">4</span>
+                </a>
+                <a href="./MaintenanceAdminDshboard.html" class="sidebar-item">
+                    <i class="fas fa-tools"></i>
+                    <span class="sidebar-item-text">Maintenance</span>
+                    <span class="badge">7</span>
+                </a>
+                <a href="./EmployeesAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-users"></i>
+                    <span class="sidebar-item-text">Workers / Technicians</span>
+                </a>
+                <a href="./SparePartsAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-boxes"></i>
+                    <span class="sidebar-item-text">Spare Parts Inventory</span>
+                    <span class="badge">3</span>
+                </a>
+                <div class="sidebar-heading">Records</div>
+                <a href="./CleaningLogsAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span class="sidebar-item-text">Cleaning Logs</span>
+                </a>
+
+                <div class="sidebar-heading">System</div>
+                <a href="./SystemSettingsAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-cog"></i>
+                    <span class="sidebar-item-text">System Settings</span>
+                </a>
+            </div>
+            <div class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+        </aside>
+        <!-- Header Section -->
+        <div class="main-content">
+            <header class="page-header">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h1 class="h4 mb-1">Personnel Management</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb small mb-0">
+                                    <li class="breadcrumb-item"><a href="./admindashboard.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Personnel Management</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <div class="col-lg-6 text-end">
+                            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addPersonnelModal">
+                                <i class="fas fa-plus me-1"></i> Add Personnel
+                            </button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class="fas fa-bars me-1"></i> Actions
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-export me-2"></i> Export Data</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i> Print Report</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <div class="container py-4">
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs mb-4" id="personnelTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-selected="true">
+                            <i class="fas fa-users me-1"></i> All Personnel (24)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="workers-tab" data-bs-toggle="tab" data-bs-target="#workers" type="button" role="tab" aria-selected="false">
+                            <i class="fas fa-hard-hat me-1"></i> Workers (16)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="technicians-tab" data-bs-toggle="tab" data-bs-target="#technicians" type="button" role="tab" aria-selected="false">
+                            <i class="fas fa-tools me-1"></i> Technicians (8)
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="dashboard-card p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon me-3">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <div>
+                                    <div class="card-title text-muted mb-0">Total Technicians</div>
+                                    <div class="card-value">8</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="dashboard-card p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon me-3">
+                                    <i class="fas fa-hard-hat"></i>
+                                </div>
+                                <div>
+                                    <div class="card-title text-muted mb-0">Total Workers</div>
+                                    <div class="card-value">16</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="dashboard-card p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon me-3">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div>
+                                    <div class="card-title text-muted mb-0">Assigned Tasks</div>
+                                    <div class="card-value">12</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="dashboard-card p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon me-3">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div>
+                                    <div class="card-title text-muted mb-0">Available Today</div>
+                                    <div class="card-value">18</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters Panel -->
+                <div class="filters-panel mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-lg-4 mb-3 mb-lg-0">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" id="searchPersonnel" placeholder="Search personnel...">
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
+                                <div class="me-2">
+                                    <select class="form-select" id="filterRole">
+                                        <option value="">Role: All</option>
+                                        <option value="worker">Worker</option>
+                                        <option value="technician">Technician</option>
+                                        <option value="supervisor">Supervisor</option>
+                                    </select>
+                                </div>
+                                <div class="me-2">
+                                    <select class="form-select" id="filterStatus">
+                                        <option value="">Status: All</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="me-2">
+                                    <select class="form-select" id="filterLocation">
+                                        <option value="">Location: All</option>
+                                        <option value="site-a">Site A</option>
+                                        <option value="site-b">Site B</option>
+                                        <option value="warehouse">Warehouse</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-outline-primary" id="resetFilters">
+                                    <i class="fas fa-sync-alt me-1"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content with Tables -->
+                <div class="tab-content" id="personnelTabContent">
+                    <!-- All Personnel Tab -->
+                    <div class="tab-pane fade show active" id="all" role="tabpanel">
+                        <div class="table-card">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle" id="allPersonnelTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Role</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Current Task/Machine</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Experience</th>
+                                            <th scope="col" class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">JD</div>
+                                                    <div>
+                                                        <div class="fw-bold">John Doe</div>
+                                                        <div class="small text-muted">ID: W001</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Worker</td>
+                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
+                                            <td>Forklift #3</td>
+                                            <td>Site A</td>
+                                            <td>3 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="W001" data-name="John Doe" data-role="Worker"><i class="fas fa-tasks me-1"></i>Assign</button>
+                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="W001"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">AS</div>
+                                                    <div>
+                                                        <div class="fw-bold">Anna Smith</div>
+                                                        <div class="small text-muted">ID: T001</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Technician</td>
+                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
+                                            <td>Machine Maintenance #5</td>
+                                            <td>Site B</td>
+                                            <td>5 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="T001" data-name="Anna Smith" data-role="Technician"><i class="fas fa-tasks me-1"></i>Assign</button>
+                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="T001"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">RJ</div>
+                                                    <div>
+                                                        <div class="fw-bold">Robert Johnson</div>
+                                                        <div class="small text-muted">ID: W002</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Worker</td>
+                                            <td><span class="badge badge-inactive"><i class="fas fa-circle me-1 small"></i>Inactive</span></td>
+                                            <td>Off Duty</td>
+                                            <td>Warehouse</td>
+                                            <td>2 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="W002" data-name="Robert Johnson" data-role="Worker"><i class="fas fa-tasks me-1"></i>Assign</button>
+                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="W002"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">MP</div>
+                                                    <div>
+                                                        <div class="fw-bold">Maria Parker</div>
+                                                        <div class="small text-muted">ID: T002</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Technician</td>
+                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
+                                            <td>System Diagnostics</td>
+                                            <td>Site A</td>
+                                            <td>7 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="T002" data-name="Maria Parker" data-role="Technician"><i class="fas fa-tasks me-1"></i>Assign</button>
+                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="T002"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="small text-muted">Showing 4 of 24 entries</div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workers Tab -->
+                    <div class="tab-pane fade" id="workers" role="tabpanel">
+                        <div class="table-card">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 40px;"><input type="checkbox" class="form-check-input"></th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Current Machine</th>
+                                            <th scope="col">Certification</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Experience</th>
+                                            <th scope="col" class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">JD</div>
+                                                    <div>
+                                                        <div class="fw-bold">John Doe</div>
+                                                        <div class="small text-muted">ID: W001</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
+                                            <td>Forklift #3</td>
+                                            <td>Heavy Machinery</td>
+                                            <td>Site A</td>
+                                            <td>3 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-truck me-1"></i>Assign Machine</button>
+                                                <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">RJ</div>
+                                                    <div>
+                                                        <div class="fw-bold">Robert Johnson</div>
+                                                        <div class="small text-muted">ID: W002</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge badge-inactive"><i class="fas fa-circle me-1 small"></i>Inactive</span></td>
+                                            <td>Off Duty</td>
+                                            <td>Safety Officer</td>
+                                            <td>Warehouse</td>
+                                            <td>2 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-truck me-1"></i>Assign Machine</button>
+                                                <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="small text-muted">Showing 2 of 16 entries</div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technicians Tab -->
+                    <div class="tab-pane fade" id="technicians" role="tabpanel">
+                        <div class="table-card">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 40px;"><input type="checkbox" class="form-check-input"></th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Current Task</th>
+                                            <th scope="col">Specialization</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Experience</th>
+                                            <th scope="col" class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">AS</div>
+                                                    <div>
+                                                        <div class="fw-bold">Anna Smith</div>
+                                                        <div class="small text-muted">ID: T001</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
+                                            <td>Machine Maintenance #5</td>
+                                            <td>Electrical</td>
+                                            <td>Site B</td>
+                                            <td>5 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-wrench me-1"></i>Assign Task</button>
+                                                <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">MP</div>
+                                                    <div>
+                                                        <div class="fw-bold">Maria Parker</div>
+                                                        <div class="small text-muted">ID: T002</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
+                                            <td>System Diagnostics</td>
+                                            <td>Mechanical</td>
+                                            <td>Site A</td>
+                                            <td>7 years</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-wrench me-1"></i>Assign Task</button>
+                                                <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="small text-muted">Showing 2 of 8 entries</div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Personnel Modal -->
+            <div class="modal fade" id="addPersonnelModal" tabindex="-1" aria-labelledby="addPersonnelModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="addPersonnelModalLabel">Add New Personnel</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addPersonnelForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="personnelRole" class="form-label">Role</label>
+                                        <select class="form-select" id="personnelRole" required>
+                                            <option value="">Select Role</option>
+                                            <option value="worker">Worker</option>
+                                            <option value="technician">Technician</option>
+                                            <option value="supervisor">Supervisor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="personnelStatus" class="form-label">Status</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="personnelStatus" checked>
+                                            <label class="form-check-label" for="personnelStatus">Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="personnelID" class="form-label">Personnel ID</label>
+                                        <input type="text" class="form-control" id="personnelID" placeholder="Auto-generated" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="location" class="form-label">Location</label>
+                                        <select class="form-select" id="location" required>
+                                            <option value="">Select Location</option>
+                                            <option value="site-a">Site A</option>
+                                            <option value="site-b">Site B</option>
+                                            <option value="warehouse">Warehouse</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phoneNumber">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="experience" class="form-label">Experience (Years)</label>
+                                        <input type="number" class="form-control" id="experience" min="0" max="50">
+                                    </div>
+                                    <div class="col-md-6" id="certificationContainer">
+                                        <label for="certification" class="form-label">Certification</label>
+                                        <select class="form-select" id="certification">
+                                            <option value="">Select Certification</option>
+                                            <option value="heavy-machinery">Heavy Machinery</option>
+                                            <option value="safety-officer">Safety Officer</option>
+                                            <option value="forklift">Forklift Operator</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6" id="specializationContainer" style="display: none;">
+                                        <label for="specialization" class="form-label">Specialization</label>
+                                        <select class="form-select" id="specialization">
+                                            <option value="">Select Specialization</option>
+                                            <option value="electrical">Electrical</option>
+                                            <option value="mechanical">Mechanical</option>
+                                            <option value="hydraulic">Hydraulics</option>
+                                            <option value="electronics">Electronics</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Additional Notes</label>
+                                    <textarea class="form-control" id="notes" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="savePersonnel">Save Personnel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assign Task Modal -->
+            <div class="modal fade" id="assignTaskModal" tabindex="-1" aria-labelledby="assignTaskModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="assignTaskModalLabel">Assign Task</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="assignTaskForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Personnel</label>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar me-2">JD</div>
+                                        <div>
+                                            <div class="fw-bold" id="assignPersonnelName">John Doe</div>
+                                            <div class="small text-muted" id="assignPersonnelID">ID: W001</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskType" class="form-label">Task Type</label>
+                                    <select class="form-select" id="taskType" required>
+                                        <option value="">Select Task Type</option>
+                                        <option value="machine-operation">Machine Operation</option>
+                                        <option value="maintenance">Maintenance</option>
+                                        <option value="inspection">Inspection</option>
+                                        <option value="repair">Repair</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskMachine" class="form-label">Machine/Equipment</label>
+                                    <select class="form-select" id="taskMachine">
+                                        <option value="">Select Machine/Equipment</option>
+                                        <option value="forklift-1">Forklift #1</option>
+                                        <option value="forklift-2">Forklift #2</option>
+                                        <option value="forklift-3">Forklift #3</option>
+                                        <option value="crane-1">Crane #1</option>
+                                        <option value="machine-5">Machine #5</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskLocation" class="form-label">Location</label>
+                                    <select class="form-select" id="taskLocation" required>
+                                        <option value="">Select Location</option>
+                                        <option value="site-a">Site A</option>
+                                        <option value="site-b">Site B</option>
+                                        <option value="warehouse">Warehouse</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskDuration" class="form-label">Estimated Duration</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="taskDuration" min="1" value="1">
+                                        <span class="input-group-text">hours</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskNotes" class="form-label">Instructions/Notes</label>
+                                    <textarea class="form-control" id="taskNotes" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="saveTask">Assign Task</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Personnel Modal -->
+            <div class="modal fade" id="editPersonnelModal" tabindex="-1" aria-labelledby="editPersonnelModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="editPersonnelModalLabel">Edit Personnel</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editPersonnelForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editPersonnelID" class="form-label">Personnel ID</label>
+                                        <input type="text" class="form-control" id="editPersonnelID" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editPersonnelStatus" class="form-label">Status</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="editPersonnelStatus" checked>
+                                            <label class="form-check-label" for="editPersonnelStatus">Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editFirstName" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="editFirstName" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editLastName" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="editLastName" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editRole" class="form-label">Role</label>
+                                        <select class="form-select" id="editRole" required>
+                                            <option value="worker">Worker</option>
+                                            <option value="technician">Technician</option>
+                                            <option value="supervisor">Supervisor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editLocation" class="form-label">Location</label>
+                                        <select class="form-select" id="editLocation" required>
+                                            <option value="site-a">Site A</option>
+                                            <option value="site-b">Site B</option>
+                                            <option value="warehouse">Warehouse</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editPhone" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="editPhone">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editEmail" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="editEmail">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editExperience" class="form-label">Experience (Years)</label>
+                                        <input type="number" class="form-control" id="editExperience" min="0" max="50">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editCertification" class="form-label">Certification</label>
+                                        <select class="form-select" id="editCertification">
+                                            <option value="">Select Certification</option>
+                                            <option value="heavy-machinery">Heavy Machinery</option>
+                                            <option value="safety-officer">Safety Officer</option>
+                                            <option value="forklift">Forklift Operator</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editNotes" class="form-label">Additional Notes</label>
+                                    <textarea class="form-control" id="editNotes" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger me-auto" id="deletePersonnel">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="updatePersonnel">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Toast -->
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span id="toastMessage">Operation completed successfully!</span>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scripts -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+            <script>
+                        // Wait for the DOM to be fully loaded before running the script
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Sidebar Toggle Functionality
+                    const sidebarToggle = document.getElementById('sidebar-toggle');
+                    const sidebar = document.getElementById('sidebar');
+                    const menuToggle = document.getElementById('menu-toggle');
+
+                    if (sidebarToggle) {
+                        sidebarToggle.addEventListener('click', function() {
+                            sidebar.classList.toggle('collapsed');
+                        });
+                    }
+
+                    // Mobile Menu Toggle
+                    if (menuToggle) {
+                        menuToggle.addEventListener('click', function() {
+                            sidebar.classList.toggle('mobile-active');
+                        });
+                    }
+
+                    // Set active menu item based on current page
+                    const currentPageUrl = window.location.pathname;
+                    const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+                    sidebarItems.forEach(item => {
+                        // Remove active class from all items first
+                        item.classList.remove('active');
+
+                        // Compare the href with the current page URL
+                        const itemUrl = item.getAttribute('href');
+
+                        // Check if the current page matches this menu item
+                        if (itemUrl === currentPageUrl ||
+                            (currentPageUrl.endsWith('/index.html') && itemUrl === '#')) {
+                            item.classList.add('active');
+                        }
+                    });
+                });
+                        // Initialize tooltips and popovers
+                        document.addEventListener("DOMContentLoaded", function() {
+                            // Show dynamic content based on role selection
+                            const personnelRoleSelect = document.getElementById('personnelRole');
+                            const certificationContainer = document.getElementById('certificationContainer');
+                            const specializationContainer = document.getElementById('specializationContainer');
+
+                            if (personnelRoleSelect) {
+                                personnelRoleSelect.addEventListener('change', function() {
+                                    if (this.value === 'worker') {
+                                        certificationContainer.style.display = 'block';
+                                        specializationContainer.style.display = 'none';
+                                    } else if (this.value === 'technician') {
+                                        certificationContainer.style.display = 'none';
+                                        specializationContainer.style.display = 'block';
+                                    } else {
+                                        certificationContainer.style.display = 'block';
+                                        specializationContainer.style.display = 'none';
+                                    }
+                                });
+                            }
+
+                            // Handle select all checkbox
+                            const selectAllCheckbox = document.getElementById('selectAll');
+                            if (selectAllCheckbox) {
+                                selectAllCheckbox.addEventListener('change', function() {
+                                    const checkboxes = document.querySelectorAll('.personnel-checkbox');
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = this.checked;
+                                    });
+                                });
+                            }
+
+                            // Handle assign task button clicks
+                            const assignButtons = document.querySelectorAll('.btn-assign');
+                            assignButtons.forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const id = this.getAttribute('data-id');
+                                    const name = this.getAttribute('data-name');
+                                    const role = this.getAttribute('data-role');
+
+                                    document.getElementById('assignPersonnelName').textContent = name;
+                                    document.getElementById('assignPersonnelID').textContent = `ID: ${id}`;
+
+                                    const assignTaskModal = new bootstrap.Modal(document.getElementById('assignTaskModal'));
+                                    assignTaskModal.show();
+                                });
+                            });
+
+                            // Handle edit button clicks
+                            const editButtons = document.querySelectorAll('.btn-edit');
+                            editButtons.forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const id = this.getAttribute('data-id');
+
+                                    // In a real application, you would fetch personnel details from API
+                                    // For demo purposes, we'll pre-fill with dummy data
+                                    document.getElementById('editPersonnelID').value = id;
+
+                                    if (id === 'W001') {
+                                        document.getElementById('editFirstName').value = 'John';
+                                        document.getElementById('editLastName').value = 'Doe';
+                                        document.getElementById('editRole').value = 'worker';
+                                        document.getElementById('editLocation').value = 'site-a';
+                                        document.getElementById('editExperience').value = '3';
+                                        document.getElementById('editCertification').value = 'heavy-machinery';
+                                    } else if (id === 'T001') {
+                                        document.getElementById('editFirstName').value = 'Anna';
+                                        document.getElementById('editLastName').value = 'Smith';
+                                        document.getElementById('editRole').value = 'technician';
+                                        document.getElementById('editLocation').value = 'site-b';
+                                        document.getElementById('editExperience').value = '5';
+                                        document.getElementById('editCertification').value = '';
+                                    }
+
+                                    const editPersonnelModal = new bootstrap.Modal(document.getElementById('editPersonnelModal'));
+                                    editPersonnelModal.show();
+                                });
+                            });
+
+                            // Handle save task button
+                            const saveTaskBtn = document.getElementById('saveTask');
+                            if (saveTaskBtn) {
+                                saveTaskBtn.addEventListener('click', function() {
+                                    // In a real application, you would save the task details to an API
+
+                                    // Close modal
+                                    const modal = bootstrap.Modal.getInstance(document.getElementById('assignTaskModal'));
+                                    modal.hide();
+
+                                    // Show success toast
+                                    document.getElementById('toastMessage').textContent = 'Task assigned successfully!';
+                                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
+                                    toast.show();
+                                });
+                            }
+
+                            // Handle save personnel button
+                            const savePersonnelBtn = document.getElementById('savePersonnel');
+                            if (savePersonnelBtn) {
+                                savePersonnelBtn.addEventListener('click', function() {
+                                    // In a real application, you would save the personnel details to an API
+
+                                    // Close modal
+                                    const modal = bootstrap.Modal.getInstance(document.getElementById('addPersonnelModal'));
+                                    modal.hide();
+
+                                    // Show success toast
+                                    document.getElementById('toastMessage').textContent = 'Personnel added successfully!';
+                                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
+                                    toast.show();
+                                });
+                            }
+
+                            // Handle update personnel button
+                            const updatePersonnelBtn = document.getElementById('updatePersonnel');
+                            if (updatePersonnelBtn) {
+                                updatePersonnelBtn.addEventListener('click', function() {
+                                    // In a real application, you would update the personnel details via an API
+
+                                    // Close modal
+                                    const modal = bootstrap.Modal.getInstance(document.getElementById('editPersonnelModal'));
+                                    modal.hide();
+
+                                    // Show success toast
+                                    document.getElementById('toastMessage').textContent = 'Personnel updated successfully!';
+                                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
+                                    toast.show();
+                                });
+                            }
+
+                            // Handle delete personnel button
+                            const deletePersonnelBtn = document.getElementById('deletePersonnel');
+                            if (deletePersonnelBtn) {
+                                deletePersonnelBtn.addEventListener('click', function() {
+                                    if (confirm('Are you sure you want to delete this personnel record? This action cannot be undone.')) {
+                                        // In a real application, you would delete the personnel via an API
+
+                                        // Close modal
+                                        const modal = bootstrap.Modal.getInstance(document.getElementById('editPersonnelModal'));
+                                        modal.hide();
+
+                                        // Show success toast
+                                        document.getElementById('toastMessage').textContent = 'Personnel deleted successfully!';
+                                        const toast = new bootstrap.Toast(document.getElementById('successToast'));
+                                        toast.show();
+                                    }
+                                });
+                            }
+
+                            // Handle filter reset button
+                            const resetFiltersBtn = document.getElementById('resetFilters');
+                            if (resetFiltersBtn) {
+                                resetFiltersBtn.addEventListener('click', function() {
+                                    document.getElementById('filterRole').value = '';
+                                    document.getElementById('filterStatus').value = '';
+                                    document.getElementById('filterLocation').value = '';
+                                    document.getElementById('searchPersonnel').value = '';
+                                });
+                            }
+                        });
+            </script>
+</body>
+</html>

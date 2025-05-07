@@ -1,0 +1,1361 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeCycle - Worker Panel</title>
+    <style>
+        /* Sidebar Styles */
+:root {
+    --primary-color: #3498db;
+            --primary-light: #ebf5fb;
+            --secondary-color: #2980b9;
+            --accent-color: #1abc9c;
+            --text-color: #2c3e50;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --success-color: #2ecc71;
+    --sidebar-width: 260px;
+    --sidebar-width-collapsed: 70px;
+    --topbar-height: 60px;
+    --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --transition-speed: 0.3s;
+}
+
+/* Layout Structure */
+.layout-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--white);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: width var(--transition-speed);
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-width-collapsed);
+}
+
+.sidebar-brand {
+    height: var(--topbar-height);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.sidebar-brand h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-brand-icon {
+    font-size: 1.8rem;
+    margin-right: 15px;
+}
+
+.sidebar-menu {
+    padding: 15px 0;
+}
+
+.sidebar-heading {
+    color: var(--secondary-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 15px 20px 5px;
+}
+
+.sidebar-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+    position: relative;
+}
+
+.sidebar-item i {
+    min-width: 30px;
+    font-size: 1.1rem;
+}
+
+.sidebar-item-text {
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity var(--transition-speed);
+}
+
+.collapsed .sidebar-item-text {
+    opacity: 0;
+    width: 0;
+}
+
+.sidebar-item:hover, .sidebar-item.active {
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+}
+
+.sidebar-item.active {
+    border-left: 4px solid var(--primary-color);
+}
+
+.sidebar-item .badge {
+    position: absolute;
+    right: 20px;
+    background-color: var(--danger-color);
+    color: white;
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    border-radius: 10px;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: var(--primary-light);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.sidebar-toggle:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+/* Main Content Area */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    transition: margin-left var(--transition-speed);
+}
+
+.sidebar.collapsed + .main-content {
+    margin-left: var(--sidebar-width-collapsed);
+}
+
+/* Responsive Styles for Sidebar */
+@@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 1001;
+    }
+
+    .sidebar.mobile-active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+        :root {
+            --primary-color: #3498db;
+            --primary-light: #ebf5fb;
+            --secondary-color: #2980b9;
+            --accent-color: #1abc9c;
+            --text-color: #2c3e50;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --success-color: #2ecc71;
+            --header-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f9fa;
+            color: var(--text-color);
+        }
+
+        /* Header styles */
+        header {
+            background-color: white;
+            height: var(--header-height);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-bell {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .profile-dropdown:hover {
+            background-color: var(--light-gray);
+        }
+
+        .profile-dropdown img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+      
+        /* Main content styles */
+        .main-content {
+            margin-top: var(--header-height);
+            padding: 20px;
+        }
+
+        .welcome-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .welcome-text p {
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            font-weight: 600;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-change {
+            font-size: 0.8rem;
+            color: var(--success-color);
+        }
+
+        .card.tasks-total .card-icon {
+            background-color: var(--primary-color);
+        }
+
+        .card.tasks-pending .card-icon {
+            background-color: var(--warning-color);
+        }
+
+        .card.tasks-completed .card-icon {
+            background-color: var(--success-color);
+        }
+
+        .card.alerts .card-icon {
+            background-color: var(--danger-color);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .task-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .task-table th, .task-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .task-table th {
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .task-table tr:hover {
+            background-color: var(--primary-light);
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        .status-in-progress {
+            background-color: #e3f2fd;
+            color: var(--primary-color);
+        }
+
+        .status-completed {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        .status-urgent {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #d35400;
+        }
+
+        .request-history {
+            margin-top: 30px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-control {
+            padding: 8px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        /* Floating action button */
+        /* Fixed Maintenance Request Button styling */
+.fixed-request-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fixed-request-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.fixed-request-btn i {
+    font-size: 1.1rem;
+}
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 20px;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 991px) {
+           
+
+           
+
+          
+
+            .logo span {
+                display: none;
+            }
+
+            .logo {
+                width: 70px;
+                justify-content: center;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .header-content {
+                margin-left: 10px;
+            }
+
+            .search-container {
+                max-width: 200px;
+                margin: 0 10px;
+            }
+
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .task-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .header-actions {
+                margin-left: auto;
+            }
+
+            .search-container {
+                display: none;
+            }
+        }
+
+        /* Additional components */
+        .notifications-panel {
+            position: absolute;
+            top: var(--header-height);
+            right: 20px;
+            width: 350px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 95;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .notification-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-list {
+            padding: 10px 0;
+        }
+
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .notification-item:hover {
+            background-color: var(--primary-light);
+        }
+
+        .notification-item.unread {
+            background-color: #f0f8ff;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .notification-text {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+        }
+
+       
+
+        .machine-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .machine-status {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .qr-container {
+            flex: 0 0 200px;
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        /* File upload styling */
+        .file-upload {
+            border: 2px dashed var(--medium-gray);
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="layout-wrapper">
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    
+    <div class="sidebar-brand">
+        
+        <i class="fas fa-recycle sidebar-brand-icon"></i>
+        <h1 class="sidebar-brand-text">SafeCycle</h1>
+    </div>
+    
+    <div class="sidebar-menu">
+        
+        <div class="sidebar-heading">Main</div>
+        <a href="./workerdashboard.html" class="sidebar-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            <span class="sidebar-item-text">Dashboard</span>
+        </a>
+        <a href="./MyTasksWorkerDshboard.html" class="sidebar-item">
+            <i class="fas fa-cogs"></i>
+            <span class="sidebar-item-text" >My Tasks</span>
+            <span class="badge">4</span>
+        </a>
+        <a href="./MaintenanceRequestsWorkerDashBoard.html" class="sidebar-item">
+            <i class="fas fa-tools"></i>
+            <span class="sidebar-item-text">Maintenance Requests</span>
+            <span class="badge">7</span>
+        </a>
+        
+        
+        
+        <div class="sidebar-heading">System</div>
+        <a href="./index.html" class="sidebar-item">
+            <i class="fas fa-cog"></i>
+            <span class="sidebar-item-text">Logout</span>
+        </a>
+    </div>
+    <div class="sidebar-toggle" id="sidebar-toggle">
+        <i class="fas fa-chevron-left"></i>
+    </div>
+     <!-- Header -->
+     <header>
+        
+        <div class="logo">
+            <i class="fas fa-recycle"></i>
+            <span>&nbsp;SafeCycle</span>
+        </div>
+        <div class="header-content">
+            <div class="search-container">
+                <input type="text" placeholder="Search tasks, machines...">
+            </div>
+            <div class="header-actions">
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="profile-dropdown">
+                    <img src="./admindashboard.html" alt="Profile">
+                    <span>John Doe</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+</aside>        
+        <!-- Your main content div -->
+        <div class="main-content">
+            <!-- Your page content here -->
+
+   
+
+    <!-- Main Content -->
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h1>Welcome back, John!</h1>
+                <p>Here's your activity summary for today.</p>
+            </div>
+            <div class="stats-cards">
+                <div class="card tasks-total">
+                    <div class="card-header">
+                        <div class="card-title">TOTAL ASSIGNED TASKS</div>
+                        <div class="card-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">12</div>
+                    <div class="card-change">+2 from yesterday</div>
+                </div>
+                <div class="card tasks-pending">
+                    <div class="card-header">
+                        <div class="card-title">PENDING TASKS</div>
+                        <div class="card-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">5</div>
+                    <div class="card-change">-1 from yesterday</div>
+                </div>
+                <div class="card tasks-completed">
+                    <div class="card-header">
+                        <div class="card-title">COMPLETED TODAY</div>
+                        <div class="card-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">7</div>
+                    <div class="card-change">+3 from yesterday</div>
+                </div>
+                <div class="card alerts">
+                    <div class="card-header">
+                        <div class="card-title">URGENT ALERTS</div>
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">2</div>
+                    <div class="card-change">+1 from yesterday</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">My Assigned Tasks</h2>
+                <div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+            <table class="task-table">
+                <thead>
+                    <tr>
+                        <th>Task ID</th>
+                        <th>Machine</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>T-1023</td>
+                        <td>Recycler-A12</td>
+                        <td>Replace filter system</td>
+                        <td><span class="task-status status-urgent">Urgent</span></td>
+                        <td>Mar 23, 2025 - 17:00</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">Start</button>
+                                <button class="btn btn-warning">Update</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>T-1022</td>
+                        <td>Compactor-B07</td>
+                        <td>Weekly maintenance checkup</td>
+                        <td><span class="task-status status-in-progress">In Progress</span></td>
+                        <td>Mar 24, 2025 - 12:00</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-warning">Update</button>
+                                <button class="btn btn-success">Complete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>T-1021</td>
+                        <td>Sorter-C15</td>
+                        <td>Clean conveyor belt</td>
+                        <td><span class="task-status status-pending">Pending</span></td>
+                        <td>Mar 25, 2025 - 09:00</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">Start</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>T-1020</td>
+                        <td>Crusher-D03</td>
+                        <td>Lubricate moving parts</td>
+                        <td><span class="task-status status-completed">Completed</span></td>
+                        <td>Mar 22, 2025 - 16:00</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">Details</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>T-1019</td>
+                        <td>Recycler-A14</td>
+                        <td>Check hydraulic system</td>
+                        <td><span class="task-status status-urgent">Urgent</span></td>
+                        <td>Mar 23, 2025 - 14:30</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">Start</button>
+                                <button class="btn btn-warning">Update</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Machine Details Section -->
+        <div class="section">
+            <div class="section-header">
+                
+            
+        <!-- Maintenance Request History -->
+        <div class="section request-history">
+            <div class="section-header">
+                <h2 class="section-title">Maintenance Request History</h2>
+                <div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+            <div class="filter-controls">
+                <select class="filter-control">
+                    <option>All Statuses</option>
+                    <option>Pending</option>
+                    <option>In Progress</option>
+                    <option>Completed</option>
+                    <option>Rejected</option>
+                </select>
+                <select class="filter-control">
+                    <option>All Machines</option>
+                    <option>Recycler-A12</option>
+                    <option>Compactor-B07</option>
+                    <option>Sorter-C15</option>
+                    <option>Crusher-D03</option>
+                </select>
+                <input type="date" class="filter-control">
+            </div>
+            <table class="task-table">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Machine</th>
+                        <th>Issue Type</th>
+                        <th>Description</th>
+                        <th>Date Filed</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MR-2045</td>
+                        <td>Recycler-A12</td>
+                        <td>Mechanical</td>
+                        <td>Filter system malfunction</td>
+                        <td>Mar 20, 2025</td>
+                        <td><span class="task-status status-in-progress">In Progress</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">View</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MR-2042</td>
+                        <td>Compactor-B07</td>
+                        <td>Electrical</td>
+                        <td>Control panel unresponsive</td>
+                        <td>Mar 18, 2025</td>
+                        <td><span class="task-status status-completed">Completed</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">View</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MR-2039</td>
+                        <td>Sorter-C15</td>
+                        <td>Maintenance</td>
+                        <td>Belt alignment issue</td>
+                        <td>Mar 15, 2025</td>
+                        <td><span class="task-status status-pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">View</button>
+                                <button class="btn btn-warning">Cancel</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MR-2036</td>
+                        <td>Crusher-D03</td>
+                        <td>Hydraulic</td>
+                        <td>Fluid leak from rear valve</td>
+                        <td>Mar 12, 2025</td>
+                        <td><span class="task-status status-completed">Completed</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">View</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+   <!-- Fixed Maintenance Request Button -->
+<button id="newRequestBtn" class="fixed-request-btn">
+    <i class="fas fa-tools"></i> New Maintenance Request
+</button>
+
+    <!-- New Request Modal -->
+    <div class="modal" id="newRequestModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2 class="modal-title">New Maintenance Request</h2>
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Machine</label>
+                    <select class="form-control">
+                        <option>Select Machine</option>
+                        <option>Recycler-A12</option>
+                        <option>Compactor-B07</option>
+                        <option>Sorter-C15</option>
+                        <option>Crusher-D03</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Issue Type</label>
+                    <select class="form-control">
+                        <option>Select Issue Type</option>
+                        <option>Mechanical</option>
+                        <option>Electrical</option>
+                        <option>Hydraulic</option>
+                        <option>Control System</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <select class="form-control">
+                        <option>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                        <option>Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" placeholder="Describe the issue in detail..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Attach Photos/Files</label>
+                    <div class="file-upload">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            Drag and drop files here or click to browse
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-warning" id="cancelRequestBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notifications Panel -->
+    <div class="notifications-panel" id="notificationsPanel">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <span>Mark all as read</span>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Urgent Maintenance Request</div>
+                    <div class="notification-text">Your request MR-2045 has been escalated to urgent status.</div>
+                    <div class="notification-time">10 minutes ago</div>
+                </div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Task Completed</div>
+                    <div class="notification-text">Task T-1020 has been marked as completed.</div>
+                    <div class="notification-time">1 hour ago</div>
+                </div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Schedule Updated</div>
+                    <div class="notification-text">Your maintenance schedule for tomorrow has been updated.</div>
+                    <div class="notification-time">3 hours ago</div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">New Task Assignment</div>
+                    <div class="notification-text">You have been assigned to Task T-1023.</div>
+                    <div class="notification-time">Yesterday</div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-comment-alt"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">New Comment</div>
+                    <div class="notification-text">Supervisor left a comment on your maintenance report.</div>
+                    <div class="notification-time">Yesterday</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 SafeCycle. All rights reserved.</p>
+    </footer>
+
+    <script>
+// Wait for the DOM to be fully loaded before running the script
+document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar Toggle Functionality
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menu-toggle');
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+        });
+    }
+    
+    // Mobile Menu Toggle
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('mobile-active');
+        });
+    }
+    
+    // Set active menu item based on current page
+    const currentPageUrl = window.location.pathname;
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    
+    sidebarItems.forEach(item => {
+        // Remove active class from all items first
+        item.classList.remove('active');
+        
+        // Compare the href with the current page URL
+        const itemUrl = item.getAttribute('href');
+        
+        // Check if the current page matches this menu item
+        if (itemUrl === currentPageUrl || 
+            (currentPageUrl.endsWith('/index.html') && itemUrl === '#')) {
+            item.classList.add('active');
+        }
+    });
+});
+
+        // JavaScript for modals and notifications
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const newRequestBtn = document.getElementById('newRequestBtn');
+            const newRequestModal = document.getElementById('newRequestModal');
+            const modalClose = document.querySelector('.modal-close');
+            const cancelRequestBtn = document.getElementById('cancelRequestBtn');
+
+            newRequestBtn.addEventListener('click', function() {
+                newRequestModal.style.display = 'flex';
+            });
+
+            modalClose.addEventListener('click', function() {
+                newRequestModal.style.display = 'none';
+            });
+
+            cancelRequestBtn.addEventListener('click', function() {
+                newRequestModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === newRequestModal) {
+                    newRequestModal.style.display = 'none';
+                }
+            });
+
+            // Notifications panel functionality
+            const notificationBell = document.getElementById('notificationBell');
+            const notificationsPanel = document.getElementById('notificationsPanel');
+
+            notificationBell.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (notificationsPanel.style.display === 'block') {
+                    notificationsPanel.style.display = 'none';
+                } else {
+                    notificationsPanel.style.display = 'block';
+                }
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target !== notificationsPanel && !notificationsPanel.contains(event.target)) {
+                    notificationsPanel.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

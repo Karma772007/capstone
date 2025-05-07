@@ -15,10 +15,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Admin\" />
-    <Folder Include="Views\Technician\" />
-    <Folder Include="Views\Worker\" />
-  </ItemGroup>
-
 </Project>

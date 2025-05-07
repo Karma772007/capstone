@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using capstone.data;
 
@@ -11,9 +12,11 @@ using capstone.data;
 namespace capstone.Migrations
 {
     [DbContext(typeof(Projectcontext))]
-    partial class ProjectcontextModelSnapshot : ModelSnapshot
+    [Migration("20250507110947_m")]
+    partial class m
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +65,15 @@ namespace capstone.Migrations
                     b.Property<DateTime>("LastMaintenanceDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("LastMaintenanceStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MachinePhotoURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

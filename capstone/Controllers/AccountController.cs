@@ -12,8 +12,6 @@ namespace capstone.Controllers
         {
             return View("Register");
         }
-       
-
-
+        
     }
 }

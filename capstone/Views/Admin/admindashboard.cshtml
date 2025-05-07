@@ -1,0 +1,1300 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeCycle System - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+    <style>
+        :root {
+            --primary-color: #4da6ff;
+            --primary-dark: #0066cc;
+            --primary-light: #e6f2ff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --sidebar-width: 260px;
+            --sidebar-width-collapsed: 70px;
+            --topbar-height: 60px;
+            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f9ff;
+            color: var(--dark-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Layout Structure */
+        .layout-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width var(--transition-speed);
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+
+            .sidebar.collapsed {
+                width: var(--sidebar-width-collapsed);
+            }
+
+        .sidebar-brand {
+            height: var(--topbar-height);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+            .sidebar-brand h1 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+        .sidebar-brand-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-heading {
+            color: var(--secondary-color);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 15px 20px 5px;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+            .sidebar-item i {
+                min-width: 30px;
+                font-size: 1.1rem;
+            }
+
+        .sidebar-item-text {
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity var(--transition-speed);
+        }
+
+        .collapsed .sidebar-item-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .sidebar-item.active {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .sidebar-item .badge {
+            position: absolute;
+            right: 20px;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 10px;
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--primary-light);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+            .sidebar-toggle:hover {
+                background-color: var(--primary-color);
+                color: var(--white);
+            }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left var(--transition-speed);
+        }
+
+        .sidebar.collapsed + .main-content {
+            margin-left: var(--sidebar-width-collapsed);
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            height: var(--topbar-height);
+            background-color: var(--white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-toggle {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            margin-right: 15px;
+            display: none;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+            .search-box input {
+                padding: 8px 15px 8px 35px;
+                border: 1px solid #e0e0e0;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                width: 250px;
+                transition: all var(--transition-speed);
+            }
+
+            .search-box i {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--secondary-color);
+            }
+
+            .search-box input:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                width: 280px;
+            }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-item {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+            .navbar-item:hover {
+                color: var(--primary-color);
+            }
+
+            .navbar-item .badge {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background-color: var(--danger-color);
+                color: white;
+                font-size: 0.7rem;
+                padding: 3px 6px;
+                border-radius: 10px;
+            }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+            .user-profile img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 10px;
+            }
+
+            .user-profile .user-info {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .user-profile .user-name {
+                font-weight: 600;
+                font-size: 0.95rem;
+            }
+
+            .user-profile .user-role {
+                font-size: 0.8rem;
+                color: var(--secondary-color);
+            }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+
+            .breadcrumb a {
+                color: var(--primary-color);
+                text-decoration: none;
+            }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .summary-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            flex-grow: 1;
+        }
+
+        .card-label {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        .card-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .card-trend {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .trend-up {
+            color: var(--success-color);
+        }
+
+        .trend-down {
+            color: var(--danger-color);
+        }
+
+        /* Status colors */
+        .bg-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .bg-success {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .bg-warning {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+
+        .bg-danger {
+            background-color: var(--danger-color);
+            color: var(--white);
+        }
+
+        .bg-info {
+            background-color: var(--info-color);
+            color: var(--white);
+        }
+
+        /* Content Sections */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+            .dashboard-grid > div {
+                background-color: var(--white);
+                border-radius: 8px;
+                box-shadow: var(--card-shadow);
+                padding: 20px;
+            }
+
+        .notifications-panel {
+            grid-column: 2;
+            grid-row: 1 / 3;
+        }
+
+        .machine-status {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .maintenance-requests {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+            }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid;
+        }
+
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+            .btn-outline-primary:hover {
+                background-color: var(--primary-color);
+                color: var(--white);
+            }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--secondary-color);
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+            display: inline-block;
+            min-width: 80px;
+        }
+
+        /* Notification List */
+        .notification-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .notification-text {
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .quick-link {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .quick-link:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .quick-link a {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                color: inherit; /* Inherit text color from the parent */
+                width: 100%;
+                height: 100%;
+                padding: 0;
+            }
+
+            .quick-link i {
+                font-size: 1.8rem;
+                color: var(--primary-color);
+                margin-bottom: 10px;
+            }
+
+            .quick-link span {
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+
+        /* Chart Containers */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .chart-container {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--white);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+            .footer-links a:hover {
+                text-decoration: underline;
+            }
+
+        /* Responsive Styles */
+        @@media (max-width: 1200px) {
+            .charts-row
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        }
+
+        @@media (max-width: 992px) {
+            .dashboard-grid
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        .notifications-panel {
+            grid-column: 1;
+            grid-row: 3;
+        }
+
+        .search-box input {
+            width: 180px;
+        }
+
+            .search-box input:focus {
+                width: 220px;
+            }
+
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar
+
+        {
+            transform: translateX(-100%);
+            position: fixed;
+            z-index: 1001;
+        }
+
+        .sidebar.mobile-active {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+        }
+
+        .menu-toggle {
+            display: block;
+        }
+
+        .user-profile .user-info {
+            display: none;
+        }
+
+        .search-box {
+            display: none;
+        }
+
+        }
+
+        @@media (max-width: 576px) {
+            .summary-cards
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-links {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        }
+
+        /* Log Out Button Style */
+        .logout-button {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: black; /* Black text color */
+            padding: 6px 12px; /* Smaller padding */
+            background-color: var(--primary-color); /* Your primary color */
+            border-radius: 8px;
+            font-size: 0.9rem; /* Slightly smaller font size */
+            transition: all 0.3s ease;
+        }
+
+            .logout-button i {
+                font-size: 1.2rem; /* Smaller icon */
+                margin-right: 6px; /* Slightly smaller space between icon and text */
+                color: black; /* Black icon color */
+            }
+
+            .logout-button:hover {
+                background-color: var(--hover-color); /* Change to a hover color */
+                transform: translateY(-2px); /* Slightly lifts on hover */
+            }
+
+    </style>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-recycle sidebar-brand-icon"></i>
+                <h1 class="sidebar-brand-text">SafeCycle</h1>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-heading">Main</div>
+                <a href="./admindashboard.html" class="sidebar-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span class="sidebar-item-text">Dashboard</span>
+                </a>
+                <a href="./machineManagmentAdmin.html" class="sidebar-item">
+                    <i class="fas fa-cogs"></i>
+                    <span class="sidebar-item-text">Machine Management</span>
+                    <span class="badge">4</span>
+                </a>
+                <a href="./MaintenanceAdminDshboard.html" class="sidebar-item">
+                    <i class="fas fa-tools"></i>
+                    <span class="sidebar-item-text">Maintenance</span>
+                    <span class="badge">7</span>
+                </a>
+                <a href="./EmployeesAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-users"></i>
+                    <span class="sidebar-item-text">Workers / Technicians</span>
+                </a>
+                <a href="./SparePartsAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-boxes"></i>
+                    <span class="sidebar-item-text">Spare Parts Inventory</span>
+                    <span class="badge">3</span>
+                </a>
+                <div class="sidebar-heading">Records</div>
+                <a href="./CleaningLogsAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span class="sidebar-item-text">Cleaning Logs</span>
+                </a>
+
+                <div class="sidebar-heading">System</div>
+                <a href="./SystemSettingsAdminDashboard.html" class="sidebar-item">
+                    <i class="fas fa-cog"></i>
+                    <span class="sidebar-item-text">System Settings</span>
+                </a>
+            </div>
+            <div class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="top-navbar">
+                <div class="navbar-left">
+                    <div class="menu-toggle" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                </div>
+                <div class="navbar-right">
+                    <div class="navbar-item">
+                        <a href="./index.html" class="logout-button">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Log Out</span>
+                        </a>
+                    </div>
+
+                    <div class="user-profile">
+                        <img src="./images/Logo.png" alt="Admin User">
+                        <div class="user-info">
+                            <div class="user-name">John Doe</div>
+                            <div class="user-role">System Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <div class="page-title">
+                    <div>
+                        <h2>Dashboard</h2>
+                        <div class="breadcrumb">
+                            <a href="#">Home</a> / Dashboard
+                        </div>
+                    </div>
+                    <div class="btn btn-primary">
+                        <i class="fas fa-download"></i> Export Report
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Total Machines</div>
+                            <div class="card-value">128</div>
+                            <div class="card-trend trend-up">
+                                <i class="fas fa-arrow-up"></i> +3% from last month
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Pending Maintenance</div>
+                            <div class="card-value">23</div>
+                            <div class="card-trend trend-up">
+                                <i class="fas fa-arrow-up"></i> +7% from last week
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon bg-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Critical Alerts</div>
+                            <div class="card-value">7</div>
+                            <div class="card-trend trend-down">
+                                <i class="fas fa-arrow-down"></i> -2% from yesterday
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-icon bg-info">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Spare Parts Low</div>
+                            <div class="card-value">12</div>
+                            <div class="card-trend trend-down">
+                                <i class="fas fa-arrow-down"></i> -5% from last week
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="quick-links">
+                    <div class="quick-link">
+                        <a href="./machineManagmentAdmin.html">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Add Machine</span>
+                        </a>
+                    </div>
+                    <div class="quick-link">
+                        <a href="./MaintenanceAdminDshboard.html">
+                            <i class="fas fa-wrench"></i>
+                            <span>Check Maintenance</span>
+                        </a>
+                    </div>
+                    <div class="quick-link">
+                        <a href="./EmployeesAdminDashboard.html">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Control Users</span>
+                        </a>
+                    </div>
+                    <div class="quick-link">
+                        <a href="./SparePartsAdminDashboard.html">
+                            <i class="fas fa-cogs"></i>
+                            <span>Check Parts</span>
+                        </a>
+                    </div>
+
+                    <div class="quick-link">
+                        <a href="./CleaningLogsAdminDashboard.html">
+                            <i class="fas fa-file-alt"></i>
+                            <span>View Logs</span>
+                        </a>
+                    </div>
+                    <div class="quick-link">
+                        <a href="./SystemSettingsAdminDashboard.html">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Change Settings</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Main Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <!-- Machine Status Section -->
+                    <div class="machine-status">
+                        <div class="section-header">
+                            <h3 class="section-title">Machine Status</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add Machine
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Machine ID</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Last Maintenance</th>
+                                        <th>Next Maintenance</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>M-1024</td>
+                                        <td>Centrifuge A101</td>
+                                        <td><span class="status-badge bg-success">Operational</span></td>
+                                        <td>Mar 15, 2025</td>
+                                        <td>Apr 15, 2025</td>
+                                        <td>
+                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
+                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
+                                            <i class="fas fa-wrench" title="Maintenance"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>M-1025</td>
+                                        <td>Incubator B205</td>
+                                        <td><span class="status-badge bg-warning">Maintenance</span></td>
+                                        <td>Mar 10, 2025</td>
+                                        <td>In Progress</td>
+                                        <td>
+                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
+                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
+                                            <i class="fas fa-wrench" title="Maintenance"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>M-1026</td>
+                                        <td>Autoclave C303</td>
+                                        <td><span class="status-badge bg-danger">Down</span></td>
+                                        <td>Feb 28, 2025</td>
+                                        <td>Immediate</td>
+                                        <td>
+                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
+                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
+                                            <i class="fas fa-wrench" title="Maintenance"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>M-1027</td>
+                                        <td>M-1027</td>
+                                        <td>Mixer D404</td>
+                                        <td><span class="status-badge bg-success">Operational</span></td>
+                                        <td>Mar 23, 2025</td>
+                                        <td>Apr 23, 2025</td>
+                                        <td>
+                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
+                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
+                                            <i class="fas fa-wrench" title="Maintenance"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>M-1028</td>
+                                        <td>Washer E505</td>
+                                        <td><span class="status-badge bg-info">Idle</span></td>
+                                        <td>Mar 20, 2025</td>
+                                        <td>Apr 20, 2025</td>
+                                        <td>
+                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
+                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
+                                            <i class="fas fa-wrench" title="Maintenance"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Maintenance Requests Section -->
+                    <div class="maintenance-requests">
+                        <div class="section-header">
+                            <h3 class="section-title">Maintenance Requests</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> New Request
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Machine</th>
+                                        <th>Priority</th>
+                                        <th>Requested By</th>
+                                        <th>Status</th>
+                                        <th>Due Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>REQ-2354</td>
+                                        <td>Autoclave C303</td>
+                                        <td><span class="status-badge bg-danger">High</span></td>
+                                        <td>Sarah Johnson</td>
+                                        <td>Assigned</td>
+                                        <td>Apr 07, 2025</td>
+                                    </tr>
+                                    <tr>
+                                        <td>REQ-2355</td>
+                                        <td>Incubator B205</td>
+                                        <td><span class="status-badge bg-warning">Medium</span></td>
+                                        <td>Mike Chen</td>
+                                        <td>In Progress</td>
+                                        <td>Apr 10, 2025</td>
+                                    </tr>
+                                    <tr>
+                                        <td>REQ-2356</td>
+                                        <td>Mixer D404</td>
+                                        <td><span class="status-badge bg-info">Low</span></td>
+                                        <td>Lisa Wong</td>
+                                        <td>Scheduled</td>
+                                        <td>Apr 15, 2025</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Notifications Panel -->
+                    <div class="notifications-panel">
+                        <div class="section-header">
+                            <h3 class="section-title">Recent Notifications</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-check-double"></i> Mark All Read
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="notification-icon bg-danger">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Critical Alert: Autoclave C303</div>
+                                    <div class="notification-text">Machine has reported temperature fluctuations outside safe operating parameters.</div>
+                                    <div class="notification-time">10 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Maintenance Complete</div>
+                                    <div class="notification-text">Scheduled maintenance for Mixer D404 completed by Technician Robert Lee.</div>
+                                    <div class="notification-time">45 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Maintenance Due Soon</div>
+                                    <div class="notification-text">3 machines require maintenance in the next 7 days.</div>
+                                    <div class="notification-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-info">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">New Staff Assignment</div>
+                                    <div class="notification-text">Technician Eliza Martinez has been assigned to your team.</div>
+                                    <div class="notification-time">5 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-primary">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Spare Parts Arrived</div>
+                                    <div class="notification-text">Order #38295 for replacement parts has been received.</div>
+                                    <div class="notification-time">Yesterday</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-secondary">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Validation Report Available</div>
+                                    <div class="notification-text">Q1 2025 validation reports are now available for review.</div>
+                                    <div class="notification-time">Yesterday</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <div class="section-header">
+                            <h3 class="section-title">Machine Performance</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-calendar"></i> Period
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="machinePerformanceChart" height="250"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">
+                            <h3 class="section-title">Maintenance Distribution</h3>
+                            <div class="section-actions">
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="maintenanceDistributionChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-copyright">
+                        &copy; 2025 SafeCycle System. All rights reserved.
+                    </div>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Support</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script>
+        // Sidebar Toggle Functionality
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('mobile-active');
+        });
+
+        // Machine Performance Chart
+        var perfCtx = document.getElementById('machinePerformanceChart').getContext('2d');
+        var performanceChart = new Chart(perfCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Operational Hours',
+                    data: [720, 680, 710, 690, 730, 705],
+                    borderColor: '#4da6ff',
+                    backgroundColor: 'rgba(77, 166, 255, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#4da6ff',
+                    tension: 0.4
+                }, {
+                    label: 'Downtime Hours',
+                    data: [24, 40, 30, 50, 15, 20],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#dc3545',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        // Maintenance Distribution Chart
+        var maintCtx = document.getElementById('maintenanceDistributionChart').getContext('2d');
+        var maintenanceChart = new Chart(maintCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Preventive', 'Corrective', 'Predictive', 'Emergency'],
+                datasets: [{
+                    data: [65, 20, 10, 5],
+                    backgroundColor: [
+                        '#28a745',
+                        '#ffc107',
+                        '#17a2b8',
+                        '#dc3545'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        });
+    </script>
+</body>
+</html>
