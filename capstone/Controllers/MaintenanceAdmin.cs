@@ -12,28 +12,11 @@ namespace capstone.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var machine = await _context.Maintenancehistories.FindAsync(id);
-            if (machine == null)
-            {
-                TempData["ErrorMessage"] = "History not found.";
-                return RedirectToAction(nameof(MaintenanceAdminDshboard));
-            }
-
-            _context.Maintenancehistories.Remove(machine);
-            await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "History deleted successfully.";
-            return RedirectToAction(nameof(MaintenanceAdminDshboard));
-        }
-
         public IActionResult MaintenanceAdminDshboard()
         {
             var clean = _context.Maintenancehistories.ToList();
             return View(clean);
         }
+
     }
 }

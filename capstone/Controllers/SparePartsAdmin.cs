@@ -13,6 +13,11 @@ namespace capstone.Controllers
             {
                 _context = context;
             }
+            public ActionResult SparePartsAdminDashboard()
+            {
+                var clean = _context.Sparepartinventories.ToList();
+                return View("SparePartsAdminDashboard");
+            }
 
             [HttpPost]
             [ValidateAntiForgeryToken]
@@ -21,22 +26,18 @@ namespace capstone.Controllers
                 var machine = await _context.Sparepartinventories.FindAsync(id);
                 if (machine == null)
                 {
-                    TempData["ErrorMessage"] = "Log not found.";
+                    TempData["ErrorMessage"] = " not found.";
                     return RedirectToAction(nameof(SparePartsAdminDashboard));
                 }
 
                 _context.Sparepartinventories.Remove(machine);
                 await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "Log deleted successfully.";
+                TempData["SuccessMessage"] = "deleted successfully.";
                 return RedirectToAction(nameof(SparePartsAdminDashboard));
             }
 
-            public IActionResult SparePartsAdminDashboard()
-            {
-                var clean = _context.Sparepartinventories.ToList();
-                return View(clean);
-            }
+           
         }
     }
 }

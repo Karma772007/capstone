@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<capstone.Models.User>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -169,26 +170,23 @@
 
         /* Responsive Styles for Sidebar */
         @@media (max-width: 768px) {
-            .sidebar
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1001;
+            }
 
-        {
-            transform: translateX(-100%);
-            position: fixed;
-            z-index: 1001;
-        }
+                .sidebar.mobile-active {
+                    transform: translateX(0);
+                }
 
-        .sidebar.mobile-active {
-            transform: translateX(0);
-        }
+            .main-content {
+                margin-left: 0 !important;
+            }
 
-        .main-content {
-            margin-left: 0 !important;
-        }
-
-        .menu-toggle {
-            display: block;
-        }
-
+            .menu-toggle {
+                display: block;
+            }
         }
 
         body {
@@ -420,32 +418,41 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>U001</td>
-                                            <td>John Doe</td>
-                                            <td>johndoe</td>
-                                            <td>johndoe@example.com</td>
-                                            <td>********</td>
-                                            <td>+1234567890</td>
-                                            <td>Admin</td>
-                                            <td class="text-end">
-                                                <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editUserModal" title="Edit User"></i>
-                                                <i class="action-icon" data-feather="trash-2" onclick="confirmDelete('U001')" title="Delete"></i>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>U002</td>
-                                            <td>Jane Smith</td>
-                                            <td>janesmith</td>
-                                            <td>janesmith@example.com</td>
-                                            <td>********</td>
-                                            <td>+0987654321</td>
-                                            <td>Worker</td>
-                                            <td class="text-end">
-                                                <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editUserModal" title="Edit User"></i>
-                                                <i class="action-icon" data-feather="trash-2" onclick="confirmDelete('U002')" title="Delete"></i>
-                                            </td>
-                                        </tr>
+                                        @foreach (var x in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @x.UserID
+                                                </td>
+                                                <td>
+                                                    @x.FullName
+                                                </td>
+                                                <td>
+                                                    @x.UserName
+                                                </td>
+                                                <td>
+                                                    @x.Email
+                                                </td>
+                                                <td>
+                                                    @x.Password
+                                                </td>
+                                                <td>
+                                                    @x.Phone
+                                                </td>
+                                                <td>
+                                                    @x.Role
+                                                </td>
+                                                <td class="text-end">
+                                                    <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editMachineModal" title="Edit"></i>
+                                                    <form method="post" action="/SystemSettingsAdmin/Delete/@x.UserID" style="display:inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this User?');">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -631,11 +638,13 @@
                       feather.replace();
 
                       // Simulate delete confirmation
-                      window.confirmDelete = function (userId) {
-                        if (confirm(`Are you sure you want to delete user ${userId}?`)) {
-                          console.log(`User ${userId} deleted`);
-                        }
-                      };
+                       // delete
+                      window.confirmDelete = function (UserID) {
+                            if (confirm(`Are you sure you want to delete User ${UserID}?`)) {
+                              // مكان حذف فعلي من السيرفر لو محتاجة
+                              console.log(`User ${UserID} deleted`);
+                            }
+                          };
 
                       // Handle system settings form submission
                       document.getElementById('systemSettingsForm').addEventListener('submit', function (e) {
