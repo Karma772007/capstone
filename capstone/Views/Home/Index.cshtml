@@ -1,0 +1,1370 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SafeCycle - Smart CMMS/Inventory system for pharmaceutical factories">
+    <meta name="keywords" content="CMMS System for Pharma, Eva Pharma Maintenance Software, Pharmaceutical Maintenance">
+    <title>SafeCycle - Smart Machine and Maintenance Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+                :root {
+                    --primary-color: #0066cc;
+                    --secondary-color: #00a896;
+                    --accent-color: #f8f9fa;
+                    --text-color: #333333;
+                    --bg-color: #ffffff;
+                    --card-bg: #f8f9fa;
+                    --border-color: #e0e0e0;
+                    --footer-bg: #f1f1f1;
+                    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    --transition: all 0.3s ease;
+                }
+
+                [data-theme="dark"] {
+                    --primary-color: #4d94ff;
+                    --secondary-color: #00c2a8;
+                    --accent-color: #2d3748;
+                    --text-color: #e2e8f0;
+                    --bg-color: #1a202c;
+                    --card-bg: #2d3748;
+                    --border-color: #4a5568;
+                    --footer-bg: #2d3748;
+                    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+                }
+
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    transition: var(--transition);
+                }
+
+                html {
+                    scroll-behavior: smooth;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    background-color: var(--bg-color);
+                    color: var(--text-color);
+                    overflow-x: hidden;
+                }
+
+                /* RTL Support for Arabic */
+                body.rtl {
+                    direction: rtl;
+                    text-align: right;
+                }
+
+                .container {
+                    width: 100%;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 0 20px;
+                }
+
+                /* Header & Navigation */
+                header {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    background-color: var(--bg-color);
+                    box-shadow: var(--shadow);
+                    z-index: 1000;
+                }
+
+                .header-container {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                }
+
+                .logo {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: var(--primary-color);
+                    text-decoration: none;
+                }
+
+                .logo img {
+                    height: 40px;
+                }
+
+                .nav-controls {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                }
+
+                .nav-toggle {
+                    display: none;
+                    background: none;
+                    border: none;
+                    font-size: 1.5rem;
+                    color: var(--primary-color);
+                    cursor: pointer;
+                }
+
+                .nav-menu {
+                    display: flex;
+                    gap: 20px;
+                    list-style: none;
+                }
+
+                .nav-link {
+                    color: var(--text-color);
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: var(--transition);
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                }
+
+                .nav-link:hover {
+                    color: var(--primary-color);
+                    background-color: var(--accent-color);
+                }
+
+                .theme-toggle, .lang-toggle {
+                    background: none;
+                    border: none;
+                    font-size: 1.2rem;
+                    color: var(--text-color);
+                    cursor: pointer;
+                    padding: 5px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .theme-toggle:hover, .lang-toggle:hover {
+                    background-color: var(--accent-color);
+                }
+
+                .auth-buttons {
+                    display: flex;
+                    gap: 10px;
+                }
+
+                .btn {
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: var(--transition);
+                    cursor: pointer;
+                    border: none;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                }
+
+                .btn-primary {
+                    background-color: var(--primary-color);
+                    color: white;
+                }
+
+                .btn-outline {
+                    background-color: transparent;
+                    color: var(--primary-color);
+                    border: 1px solid var(--primary-color);
+                }
+
+                .btn-primary:hover {
+                    opacity: 0.9;
+                    transform: translateY(-2px);
+                }
+
+                .btn-outline:hover {
+                    background-color: var(--primary-color);
+                    color: white;
+                }
+
+                /* Hero Section */
+                .hero {
+                    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('./images/Logo.png')center;
+                    height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    color: white;
+                    text-align: center;
+                    padding-top: 60px;
+                    position: relative;
+                    overflow: hidden;
+
+                }
+
+                .hero::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(135deg, rgba(0, 102, 204, 0.2), rgba(0, 168, 150, 0.2));
+                    z-index: 1;
+                }
+
+                .hero-content {
+                    position: relative;
+                    z-index: 2;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    opacity: 0;
+                    transform: translateY(30px);
+                    animation: fadeInUp 1s ease forwards;
+                }
+
+                .hero h1 {
+                    font-size: 3rem;
+                    margin-bottom: 1rem;
+                    line-height: 1.2;
+                }
+
+                .hero p {
+                    font-size: 1.25rem;
+                    margin-bottom: 2rem;
+                    opacity: 0.9;
+                }
+
+                .hero-buttons {
+                    display: flex;
+                    gap: 15px;
+                    justify-content: center;
+                    margin-top: 30px;
+                }
+
+                /* Introduction Section */
+                section {
+                    padding: 100px 0;
+                    opacity: 0;
+                    transform: translateY(30px);
+                    transition: opacity 0.8s ease, transform 0.8s ease;
+                }
+
+                section.visible {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+                .section-title {
+                    text-align: center;
+                    margin-bottom: 60px;
+                }
+
+                .section-title h2 {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                    margin-bottom: 15px;
+                    position: relative;
+                    display: inline-block;
+                }
+
+                .section-title h2::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 70px;
+                    height: 3px;
+                    background-color: var(--secondary-color);
+                }
+
+                .section-title p {
+                    font-size: 1.1rem;
+                    max-width: 700px;
+                    margin: 0 auto;
+                    opacity: 0.8;
+                }
+
+                .intro-content {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 40px;
+                    align-items: center;
+                }
+
+                .intro-text {
+                    flex: 1;
+                    min-width: 300px;
+                }
+
+                .intro-video {
+                    flex: 1;
+                    min-width: 300px;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    box-shadow: var(--shadow);
+                }
+
+                .intro-video iframe {
+                    width: 100%;
+                    height: 315px;
+                    border: none;
+                }
+
+                /* Features Section */
+                .features-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 25px;
+                }
+
+                .feature-card {
+                    background-color: var(--card-bg);
+                    border-radius: 10px;
+                    padding: 30px;
+                    box-shadow: var(--shadow);
+                    transition: var(--transition);
+                    border: 1px solid var(--border-color);
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .feature-card:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                }
+
+                .feature-icon {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                    margin-bottom: 20px;
+                }
+
+                .feature-title {
+                    font-size: 1.25rem;
+                    font-weight: 600;
+                    margin-bottom: 15px;
+                }
+
+                .feature-desc {
+                    opacity: 0.8;
+                    flex-grow: 1;
+                }
+
+                /* Benefits Section */
+                .benefits {
+                    background-color: var(--accent-color);
+                }
+
+                .benefits-list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 20px;
+                    justify-content: center;
+                }
+
+                .benefit-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    background-color: var(--bg-color);
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: var(--shadow);
+                    width: calc(50% - 20px);
+                    min-width: 300px;
+                    border: 1px solid var(--border-color);
+                }
+
+                .benefit-icon {
+                    font-size: 1.8rem;
+                    color: var(--secondary-color);
+                    flex-shrink: 0;
+                }
+
+                .benefit-text h3 {
+                    font-size: 1.1rem;
+                    margin-bottom: 5px;
+                }
+
+                .benefit-text p {
+                    font-size: 0.9rem;
+                    opacity: 0.8;
+                }
+
+                /* User Roles Section */
+                .roles-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    overflow: hidden;
+                    box-shadow: var(--shadow);
+                    border-radius: 10px;
+                    margin-top: 40px;
+                }
+
+                .roles-table thead {
+                    background-color: var(--primary-color);
+                    color: white;
+                }
+
+                .roles-table th, .roles-table td {
+                    padding: 15px;
+                    text-align: left;
+                    border-bottom: 1px solid var(--border-color);
+                }
+
+                .roles-table tbody tr {
+                    background-color: var(--card-bg);
+                }
+
+                .roles-table tbody tr:hover {
+                    background-color: var(--accent-color);
+                }
+
+                .rtl .roles-table th, .rtl .roles-table td {
+                    text-align: right;
+                }
+
+                /* Screenshots Section */
+                .screenshots-container {
+          position: relative;
+          max-width: 900px;
+          margin: auto;
+          overflow: hidden;
+          border-radius: 10px;
+        }
+
+        .screenshot {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .screenshot.active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .screenshot-slider {
+            position: relative;
+            min-height: 500px; /* حسب حجم صورك */
+        }
+
+
+        .screenshot img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 10px;
+          object-fit: contain; /* مهم عشان يحافظ على حجم الصورة بدون ما يتمط أو يتقص */
+        }
+
+        .screenshot-dots {
+          text-align: center;
+          margin-top: 15px;
+        }
+
+        .screenshot-dots .dot {
+          display: inline-block;
+          width: 12px;
+          height: 12px;
+          margin: 0 5px;
+          background-color: #ccc;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .screenshot-dots .dot.active {
+          background-color: #007bff;
+        }
+
+                /* Auth Section */
+                .auth-section {
+                    background-color: var(--accent-color);
+                }
+
+                .auth-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 40px;
+                }
+
+                .login-form {
+                    flex: 1;
+                    min-width: 300px;
+                    background-color: var(--bg-color);
+                    padding: 30px;
+                    border-radius: 10px;
+                    box-shadow: var(--shadow);
+                    border: 1px solid var(--border-color);
+                }
+
+                .login-form h3 {
+                    margin-bottom: 20px;
+                    color: var(--primary-color);
+                }
+
+                .form-group {
+                    margin-bottom: 20px;
+                }
+
+                .form-group label {
+                    display: block;
+                    margin-bottom: 8px;
+                    font-weight: 500;
+                }
+
+                .form-group input {
+                    width: 100%;
+                    padding: 10px 15px;
+                    border-radius: 4px;
+                    border: 1px solid var(--border-color);
+                    background-color: var(--bg-color);
+                    color: var(--text-color);
+                    font-size: 1rem;
+                }
+
+                .register-cta {
+                    flex: 1;
+                    min-width: 300px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+
+                .register-cta h3 {
+                    font-size: 1.8rem;
+                    margin-bottom: 20px;
+                }
+
+                .register-cta p {
+                    margin-bottom: 30px;
+                    font-size: 1.1rem;
+                }
+
+                /* Footer */
+                footer {
+                    background-color: var(--footer-bg);
+                    padding: 40px 0;
+                    border-top: 1px solid var(--border-color);
+                }
+
+                .footer-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 30px;
+                }
+
+                .footer-column {
+                    flex: 1;
+                    min-width: 200px;
+                }
+
+                .footer-column h3 {
+                    font-size: 1.2rem;
+                    margin-bottom: 20px;
+                    position: relative;
+                    display: inline-block;
+                }
+
+                .footer-column h3::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -8px;
+                    left: 0;
+                    width: 40px;
+                    height: 2px;
+                    background-color: var(--secondary-color);
+                }
+
+                .rtl .footer-column h3::after {
+                    left: unset;
+                    right: 0;
+                }
+
+                .footer-links {
+                    list-style: none;
+                }
+
+                .footer-links li {
+                    margin-bottom: 10px;
+                }
+
+                .footer-links a {
+                    color: var(--text-color);
+                    text-decoration: none;
+                    opacity: 0.8;
+                    transition: var(--transition);
+                }
+
+                .footer-links a:hover {
+                    opacity: 1;
+                    color: var(--primary-color);
+                }
+
+                .footer-bottom {
+                    margin-top: 40px;
+                    padding-top: 20px;
+                    border-top: 1px solid var(--border-color);
+                    text-align: center;
+                    opacity: 0.7;
+                    font-size: 0.9rem;
+                }
+
+                /* SSL Badge */
+                .ssl-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 5px 10px;
+                    background-color: rgba(0, 128, 0, 0.1);
+                    border: 1px solid rgba(0, 128, 0, 0.3);
+                    border-radius: 4px;
+                    color: green;
+                    font-size: 0.8rem;
+                    margin-top: 10px;
+                }
+
+                /* Animations */
+                @@keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* Media Queries */
+                @@media (max-width: 768px) {
+                    .header-container {
+                        padding: 10px 20px;
+                    }
+
+                    .nav-toggle {
+                        display: block;
+                    }
+
+                    .nav-menu {
+                        position: fixed;
+                        top: 70px;
+                        right: -100%;
+                        flex-direction: column;
+                        background-color: var(--bg-color);
+                        width: 80%;
+                        max-width: 300px;
+                        height: calc(100vh - 70px);
+                        padding: 20px;
+                        box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+                        transition: 0.3s ease-in-out;
+                        z-index: 1000;
+                    }
+
+                    .rtl .nav-menu {
+                        right: unset;
+                        left: -100%;
+                        box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .nav-menu.active {
+                        right: 0;
+                    }
+
+                    .rtl .nav-menu.active {
+                        left: 0;
+                    }
+
+                    .hero h1 {
+                        font-size: 2.2rem;
+                    }
+
+                    .hero p {
+                        font-size: 1rem;
+                    }
+
+                    .hero-buttons {
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+
+                    .section-title h2 {
+                        font-size: 2rem;
+                    }
+
+                    .benefit-item {
+                        width: 100%;
+                    }
+
+                    .auth-container {
+                        flex-direction: column;
+                    }
+                }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container container">
+            <a href="./images/Logo.png" class="logo">
+                <i class="fas fa-sync-alt"></i>
+                <span>SafeCycle</span>
+            </a>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#intro" class="nav-link" data-en="About" data-ar="حول">About</a></li>
+                    <li><a href="#features" class="nav-link" data-en="Features" data-ar="المميزات">Features</a></li>
+                    <li><a href="#benefits" class="nav-link" data-en="Benefits" data-ar="الفوائد">Benefits</a></li>
+                    <li><a href="#roles" class="nav-link" data-en="Roles" data-ar="الأدوار">Roles</a></li>
+                    <li><a href="#screenshots" class="nav-link" data-en="Screenshots" data-ar="لقطات الشاشة">Screenshots</a></li>
+                    <li><a href="#auth" class="nav-link" data-en="Login/Register" data-ar="تسجيل الدخول/التسجيل">Login/Register</a></li>
+                </ul>
+            </nav>
+            <div class="nav-controls">
+                <button class="theme-toggle" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="lang-toggle" title="Toggle Language">
+                    <i class="fas fa-globe"></i>
+                    <span class="lang-text" data-en="EN" data-ar="AR">EN</span>
+                </button>
+                <div class="auth-buttons">
+                    <a href="~/Account/Login" class="btn btn-outline" data-en="Login" data-ar="تسجيل الدخول">Login</a>
+                    <a href="~/Account/Register" class="btn btn-primary" data-en="Register" data-ar="إنشاء حساب">Register</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <h1 data-en="Welcome to SafeCycle" data-ar="مرحبًا بك في سيف سايكل">Welcome to SafeCycle</h1>
+            <p data-en="Smart Machine and Maintenance Management System" data-ar="نظام ذكي لإدارة الآلات والصيانة">
+                Smart Machine and Maintenance Management System
+            </p>
+            <p data-en="Track, Maintain, and Optimize Your Factory Equipment and Inventory with Confidence"
+               data-ar="تتبع وصيانة وتحسين معدات المصنع والمخزون بثقة">
+                Track, Maintain, and Optimize Your Factory Equipment and Inventory with Confidence
+            </p>
+           
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section id="intro" class="intro">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-en="What is SafeCycle?" data-ar="ما هو سيف سايكل؟">What is SafeCycle?</h2>
+                <p data-en="A comprehensive solution for pharmaceutical factories" data-ar="حل شامل لمصانع الأدوية">
+                    A comprehensive solution for pharmaceutical factories
+                </p>
+            </div>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <p data-en="SafeCycle is a centralized digital platform designed for factories to efficiently manage machine maintenance, cleaning validations, spare parts inventory, and regulatory compliance—all in real time."
+                       data-ar="سيف سايكل هو منصة رقمية مركزية مصممة للمصانع لإدارة صيانة الآلات وعمليات التحقق من التنظيف ومخزون قطع الغيار والامتثال التنظيمي بكفاءة - كل ذلك في الوقت الفعلي.">
+                        SafeCycle is a centralized digital platform designed for factories to efficiently manage machine maintenance, cleaning validations, spare parts inventory, and regulatory compliance—all in real time.
+                    </p>
+                    <p data-en="Our system replaces traditional paper-based processes with a streamlined digital workflow that enhances productivity, reduces downtime, and ensures your factory meets the strictest regulatory requirements."
+                       data-ar="يستبدل نظامنا العمليات التقليدية القائمة على الورق بسير عمل رقمي مبسط يعزز الإنتاجية ويقلل من وقت التوقف ويضمن استيفاء مصنعك لأكثر المتطلبات التنظيمية صرامة.">
+                        Our system replaces traditional paper-based processes with a streamlined digital workflow that enhances productivity, reduces downtime, and ensures your factory meets the strictest regulatory requirements.
+                    </p>
+                    <p data-en="With SafeCycle, pharmaceutical manufacturers can focus on what matters most - producing quality medicines while maintaining operational excellence."
+                       data-ar="مع سيف سايكل، يمكن لمصنعي الأدوية التركيز على ما يهم أكثر - إنتاج أدوية عالية الجودة مع الحفاظ على التميز التشغيلي.">
+                        With SafeCycle, pharmaceutical manufacturers can focus on what matters most - producing quality medicines while maintaining operational excellence.
+                    </p>
+                </div>
+                <div class="intro-video">
+                    <iframe src="./images/vid2.mp4"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-en="Key Features" data-ar="الميزات الرئيسية">Key Features</h2>
+                <p data-en="Comprehensive tools to manage your factory operations" data-ar="أدوات شاملة لإدارة عمليات المصنع">
+                    Comprehensive tools to manage your factory operations
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="feature-title" data-en="Machine Tracking" data-ar="تتبع الآلات">Machine Tracking</h3>
+                    <p class="feature-desc" data-en="Monitor machine status, location, and health in real time"
+                       data-ar="مراقبة حالة الآلة وموقعها وصحتها في الوقت الفعلي">
+                        Monitor machine status, location, and health in real time
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <h3 class="feature-title" data-en="Maintenance Requests" data-ar="طلبات الصيانة">Maintenance Requests</h3>
+                    <p class="feature-desc" data-en="Submit and manage maintenance tasks seamlessly"
+                       data-ar="تقديم وإدارة مهام الصيانة بسلاسة">
+                        Submit and manage maintenance tasks seamlessly
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-broom"></i>
+                    </div>
+                    <h3 class="feature-title" data-en="Cleaning & Validation" data-ar="التنظيف والتحقق">Cleaning & Validation</h3>
+                    <p class="feature-desc" data-en="Log cleaning tasks and validate machines for compliance"
+                       data-ar="تسجيل مهام التنظيف والتحقق من الآلات للامتثال">
+                        Log cleaning tasks and validate machines for compliance
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="feature-title" data-en="Analytics & Reports" data-ar="التحليلات والتقارير">Analytics & Reports</h3>
+                    <p class="feature-desc" data-en="Generate insights, track downtimes, and prepare audit-ready reports"
+                       data-ar="إنشاء رؤى، وتتبع أوقات التوقف، وإعداد تقارير جاهزة للتدقيق">
+                        Generate insights, track downtimes, and prepare audit-ready reports
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h3 class="feature-title" data-en="Spare Parts Inventory" data-ar="مخزون قطع الغيار">Spare Parts Inventory</h3>
+                    <p class="feature-desc" data-en="Manage spare parts stock, reorder levels, and usage tracking"
+                       data-ar="إدارة مخزون قطع الغيار ومستويات إعادة الطلب وتتبع الاستخدام">
+                        Manage spare parts stock, reorder levels, and usage tracking
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="feature-title" data-en="Real-Time Alerts" data-ar="تنبيهات في الوقت الفعلي">Real-Time Alerts</h3>
+                    <p class="feature-desc" data-en="Get notified instantly for critical maintenance or cleaning tasks"
+                       data-ar="تلقي إشعارات فورية لمهام الصيانة أو التنظيف الحرجة">
+                        Get notified instantly for critical maintenance or cleaning tasks
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section (continued) -->
+    <section id="benefits" class="benefits">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-en="Why Use SafeCycle?" data-ar="لماذا تستخدم سيف سايكل؟">Why Use SafeCycle?</h2>
+                <p data-en="Optimize operations and ensure compliance" data-ar="تحسين العمليات وضمان الامتثال">
+                    Optimize operations and ensure compliance
+                </p>
+            </div>
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h3 data-en="Minimize Downtime" data-ar="تقليل وقت التوقف">Minimize Downtime</h3>
+                        <p data-en="Proactive maintenance scheduling and real-time monitoring reduce unexpected machine failures"
+                           data-ar="جدولة الصيانة الاستباقية والمراقبة في الوقت الحقيقي تقلل من أعطال الآلات غير المتوقعة">
+                            Proactive maintenance scheduling and real-time monitoring reduce unexpected machine failures
+                        </p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h3 data-en="Regulatory Compliance" data-ar="الامتثال التنظيمي">Regulatory Compliance</h3>
+                        <p data-en="Meet FDA, GMP, and ISO requirements with comprehensive documentation and validation"
+                           data-ar="تلبية متطلبات FDA وGMP وISO مع توثيق وتحقق شاملين">
+                            Meet FDA, GMP, and ISO requirements with comprehensive documentation and validation
+                        </p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h3 data-en="Increase Efficiency" data-ar="زيادة الكفاءة">Increase Efficiency</h3>
+                        <p data-en="Streamlined workflows and automated processes boost overall factory productivity"
+                           data-ar="تعزز سير العمل المبسط والعمليات الآلية من إنتاجية المصنع العامة">
+                            Streamlined workflows and automated processes boost overall factory productivity
+                        </p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-digital-tachograph"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h3 data-en="Digital Transformation" data-ar="التحول الرقمي">Digital Transformation</h3>
+                        <p data-en="Replace manual paper-based systems with digital solutions that eliminate errors"
+                           data-ar="استبدال الأنظمة اليدوية الورقية بحلول رقمية تقضي على الأخطاء">
+                            Replace manual paper-based systems with digital solutions that eliminate errors
+                        </p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h3 data-en="Real-Time Decision Making" data-ar="اتخاذ القرارات في الوقت الفعلي">Real-Time Decision Making</h3>
+                        <p data-en="Access critical data instantly to make informed operational decisions"
+                           data-ar="الوصول إلى البيانات الحساسة فورًا لاتخاذ قرارات تشغيلية مستنيرة">
+                            Access critical data instantly to make informed operational decisions
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Roles Section -->
+    <section id="roles" class="roles">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-en="User Roles & Access" data-ar="أدوار المستخدم والوصول">User Roles & Access</h2>
+                <p data-en="Different permissions for different team members" data-ar="أذونات مختلفة لأعضاء الفريق المختلفين">
+                    Different permissions for different team members
+                </p>
+            </div>
+            <table class="roles-table">
+                <thead>
+                    <tr>
+                        <th data-en="User Role" data-ar="دور المستخدم">User Role</th>
+                        <th data-en="Actions Available" data-ar="الإجراءات المتاحة">Actions Available</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-en="Admin" data-ar="المسؤول">Admin</td>
+                        <td data-en="Full control, manage machines, approve requests, view reports"
+                            data-ar="تحكم كامل، إدارة الآلات، الموافقة على الطلبات، عرض التقارير">
+                            Full control, manage machines, approve requests, view reports
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-en="Technician" data-ar="الفني">Technician</td>
+                        <td data-en="Receive tasks, update maintenance, manage cleaning"
+                            data-ar="استلام المهام، تحديث الصيانة، إدارة التنظيف">
+                            Receive tasks, update maintenance, manage cleaning
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-en="Worker" data-ar="العامل">Worker</td>
+                        <td data-en="Submit maintenance requests, view personal task status"
+                            data-ar="تقديم طلبات الصيانة، عرض حالة المهام الشخصية">
+                            Submit maintenance requests, view personal task status
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section id="screenshots" class="screenshots">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-en="System Preview" data-ar="معاينة النظام">System Preview</h2>
+                <p data-en="See SafeCycle in action" data-ar="شاهد سيف سايكل قيد العمل">
+                    See SafeCycle in action
+                </p>
+            </div>
+            <div class="screenshots-container">
+                <div class="screenshot-slider">
+                    <div class="screenshot active">
+                        <img src="./images/Admin Dashboard.png" alt="Admin Dashboard" />
+                    </div>
+                    <div class="screenshot">
+                        <img src="./images/Worker Dashboard.png" alt="Worker Dashboard List" />
+                    </div>
+                    <div class="screenshot">
+                        <img src="./images/Technician Dashboard.png" alt="Technician Dashboard" />
+                    </div>
+
+                </div>
+                <div class="screenshot-dots">
+                    <span class="dot active" data-index="0"></span>
+                    <span class="dot" data-index="1"></span>
+                    <span class="dot" data-index="2"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auth Section -->
+    <section id="auth" class="auth-section">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-en="Get Started" data-ar="البدء">Get Started</h2>
+                <p data-en="Access your account or create a new one" data-ar="الوصول إلى حسابك أو إنشاء حساب جديد">
+                    Access your account or create a new one
+                </p>
+            </div>
+            <div class="auth-container">
+                <div class="login-form">
+                    <h3 data-en="Login to Your Account" data-ar="تسجيل الدخول إلى حسابك">Login to Your Account</h3>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username" data-en="Username" data-ar="اسم المستخدم">Username</label>
+                            <input type="text" id="username" placeholder="Enter your username" data-en-placeholder="Enter your username" data-ar-placeholder="أدخل اسم المستخدم" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" data-en="Password" data-ar="كلمة المرور">Password</label>
+                            <input type="password" id="password" placeholder="Enter your password" data-en-placeholder="Enter your password" data-ar-placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-en="Login" data-ar="تسجيل الدخول">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                    <div class="ssl-badge">
+                        <i class="fas fa-lock"></i>
+                        <span data-en="Secured by SSL" data-ar="مؤمن بواسطة SSL">Secured by SSL</span>
+                    </div>
+                </div>
+                <div class="register-cta">
+                    <h3 data-en="New to SafeCycle?" data-ar="جديد في سيف سايكل؟">New to SafeCycle?</h3>
+                    <p data-en="Create an account to start managing your factory operations efficiently."
+                       data-ar="قم بإنشاء حساب لبدء إدارة عمليات المصنع الخاص بك بكفاءة.">
+                        Create an account to start managing your factory operations efficiently.
+                    </p>
+                    <a href="~/Account/Register" class="btn btn-primary" data-en="Register Now" data-ar="سجل الآن">
+                        <i class="fas fa-user-plus"></i> Register Now
+                    </a>
+                    <p class="mt-4" data-en="Or contact your administrator to create an account for you."
+                       data-ar="أو اتصل بمسؤول النظام لإنشاء حساب لك.">
+                        Or contact your administrator to create an account for you.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-column">
+                <h3 data-en="About SafeCycle" data-ar="عن سيف سايكل">About SafeCycle</h3>
+                <p data-en="SafeCycle is a leading CMMS/Inventory system designed specifically for pharmaceutical factories, helping maintain regulatory compliance and operational efficiency."
+                   data-ar="سيف سايكل هو نظام رائد لإدارة الصيانة والمخزون مصمم خصيصًا لمصانع الأدوية، يساعد في الحفاظ على الامتثال التنظيمي والكفاءة التشغيلية.">
+                    SafeCycle is a leading CMMS/Inventory system designed specifically for pharmaceutical factories, helping maintain regulatory compliance and operational efficiency.
+                </p>
+            </div>
+            <div class="footer-column">
+                <h3 data-en="Quick Links" data-ar="روابط سريعة">Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#intro" data-en="About" data-ar="حول">About</a></li>
+                    <li><a href="#features" data-en="Features" data-ar="المميزات">Features</a></li>
+                    <li><a href="#benefits" data-en="Benefits" data-ar="الفوائد">Benefits</a></li>
+                    <li><a href="#roles" data-en="User Roles" data-ar="أدوار المستخدمين">User Roles</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 data-en="Support" data-ar="الدعم">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#" data-en="Contact Support" data-ar="اتصل بالدعم">Contact Support</a></li>
+                    <li><a href="#" data-en="User Guide" data-ar="دليل المستخدم">User Guide</a></li>
+                    <li><a href="#" data-en="FAQs" data-ar="الأسئلة الشائعة">FAQs</a></li>
+                    <li><a href="#" data-en="System Status" data-ar="حالة النظام">System Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 data-en="Contact" data-ar="اتصل بنا">Contact</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:support@safecycle.com">support@safecycle.com</a></li>
+                    <li><i class="fas fa-phone"></i> <a href="tel:+201234567890">+20 123 456 7890</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p data-en="© 2025 SafeCycle. All rights reserved. Powered by Eva Pharma IT Department."
+               data-ar="© 2025 سيف سايكل. جميع الحقوق محفوظة. مدعوم من قسم تكنولوجيا المعلومات بشركة إيڤا فارما.">
+                © 2025 SafeCycle. All rights reserved. Powered by Eva Pharma IT Department.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#intro" id="back-to-top" class="btn btn-primary" style="position: fixed; bottom: 20px; right: 20px; z-index: 99; display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const themeToggle = document.querySelector('.theme-toggle');
+            const langToggle = document.querySelector('.lang-toggle');
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            const backToTop = document.getElementById('back-to-top');
+            const sections = document.querySelectorAll('section:not(.hero)');
+            const dots = document.querySelectorAll('.dot');
+            const screenshots = document.querySelectorAll('.screenshot');
+            const loginForm = document.getElementById('loginForm');
+
+            // Theme Toggle
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                // Apply animation
+                document.body.style.opacity = '0.8';
+
+                setTimeout(() => {
+                    document.documentElement.setAttribute('data-theme', newTheme);
+
+                    // Update icon
+                    const themeIcon = themeToggle.querySelector('i');
+                    if (newTheme === 'dark') {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                        themeToggle.setAttribute('title', currentLang === 'ar' ? 'تبديل إلى الوضع الفاتح' : 'Toggle Light Mode');
+                    } else {
+                        themeIcon.classList.remove('fa-sun');
+                        themeIcon.classList.add('fa-moon');
+                        themeToggle.setAttribute('title', currentLang === 'ar' ? 'تبديل إلى الوضع المظلم' : 'Toggle Dark Mode');
+                    }
+
+                    // Store preference in localStorage
+                    localStorage.setItem('safecycle-theme', newTheme);
+
+                    document.body.style.opacity = '1';
+                }, 200);
+            });
+
+            // Language Toggle
+            let currentLang = 'en';
+
+            langToggle.addEventListener('click', function() {
+                // Toggle between English and Arabic
+                currentLang = currentLang === 'en' ? 'ar' : 'en';
+
+                // Apply animation
+                document.body.style.opacity = '0.8';
+
+                setTimeout(() => {
+                    // Update body class for RTL/LTR
+                    if (currentLang === 'ar') {
+                        document.body.classList.add('rtl');
+                    } else {
+                        document.body.classList.remove('rtl');
+                    }
+
+                    // Update language text
+                    document.querySelector('.lang-text').textContent = currentLang === 'ar' ? 'AR' : 'EN';
+
+                    // Update all translatable elements
+                    const translatableElements = document.querySelectorAll('[data-en]');
+                    translatableElements.forEach(element => {
+                        element.textContent = element.getAttribute(`data-${currentLang}`);
+                    });
+
+                    // Update placeholders
+                    const inputElements = document.querySelectorAll('input[data-en-placeholder]');
+                    inputElements.forEach(element => {
+                        element.placeholder = element.getAttribute(`data-${currentLang}-placeholder`);
+                    });
+
+                    // Store preference in localStorage
+                    localStorage.setItem('safecycle-lang', currentLang);
+
+                    document.body.style.opacity = '1';
+                }, 200);
+            });
+
+            // Mobile Navigation Toggle
+            navToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+
+                const icon = navToggle.querySelector('i');
+                if (navMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Close mobile menu if open
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                        navToggle.querySelector('i').classList.remove('fa-times');
+                        navToggle.querySelector('i').classList.add('fa-bars');
+                    }
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Scroll animations for sections
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Screenshot slider functionality
+            let currentScreenshot = 0;
+            let slideInterval;
+
+            function showScreenshot(index) {
+                screenshots.forEach((screenshot, i) => {
+                    screenshot.classList.remove('active');
+                    dots[i].classList.remove('active');
+                });
+
+                screenshots[index].classList.add('active');
+                dots[index].classList.add('active');
+                currentScreenshot = index;
+            }
+
+            function nextScreenshot() {
+                currentScreenshot = (currentScreenshot + 1) % screenshots.length;
+                showScreenshot(currentScreenshot);
+            }
+
+            // Initialize slider
+            function startSlider() {
+                slideInterval = setInterval(nextScreenshot, 5000);
+            }
+
+            function stopSlider() {
+                clearInterval(slideInterval);
+            }
+
+            startSlider();
+
+            // Click on dots to change screenshot
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    stopSlider();
+                    showScreenshot(index);
+                    startSlider();
+                });
+            });
+
+            // Screenshot container hover effects
+            const screenshotContainer = document.querySelector('.screenshots-container');
+
+            screenshotContainer.addEventListener('mouseenter', stopSlider);
+            screenshotContainer.addEventListener('mouseleave', startSlider);
+
+            // Back to top button
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTop.style.display = 'block';
+                } else {
+                    backToTop.style.display = 'none';
+                }
+            });
+
+            // Form submission (prevent default for demo)
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // Get form data
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+
+                    // Simple validation
+                    if (!username || !password) {
+                        alert(currentLang === 'ar' ? 'يرجى تعبئة جميع الحقول المطلوبة' : 'Please fill in all required fields');
+                        return;
+                    }
+
+                    // Simulate login - in a real app, this would be an API call
+                    alert(currentLang === 'ar'
+                          ? 'تم تسجيل الدخول بنجاح! سيتم تحويلك إلى لوحة التحكم.'
+                          : 'Login successful! You would be redirected to the dashboard.');
+
+                    // Clear form
+                    loginForm.reset();
+                });
+            }
+
+            // Load saved preferences (theme and language)
+            function loadSavedPreferences() {
+                // Theme
+                const savedTheme = localStorage.getItem('safecycle-theme');
+                if (savedTheme) {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+
+                    // Update icon
+                    const themeIcon = themeToggle.querySelector('i');
+                    if (savedTheme === 'dark') {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                    }
+                }
+
+                // Language
+                const savedLang = localStorage.getItem('safecycle-lang');
+                if (savedLang && savedLang !== 'en') {
+                    // Trigger language switch if saved language is not English
+                    currentLang = 'en';  // Set to opposite so toggle works correctly
+                    langToggle.click();
+                }
+            }
+
+            // Call function to load saved preferences
+            loadSavedPreferences();
+
+            // Page load animations
+            setTimeout(() => {
+                document.querySelector('.hero').style.animation = 'fadeInUp 1s ease forwards';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
+

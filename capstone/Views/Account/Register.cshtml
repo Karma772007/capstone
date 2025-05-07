@@ -1,0 +1,344 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SafeCycle - Registration</title>
+        <style>
+            :root {
+                --primary-color: #4da6ff;
+                --secondary-color: #e6f2ff;
+                --accent-color: #005cb3;
+                --text-color: #333;
+                --light-text: #666;
+                --white: #fff;
+                --error: #ff4d4d;
+                --success: #47d147;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                background-color: #f5f9ff;
+                color: var(--text-color);
+                line-height: 1.6;
+            }
+
+            .container {
+                display: flex;
+                min-height: 100vh;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .registration-card {
+                background-color: var(--white);
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 550px;
+                overflow: hidden;
+            }
+
+            .card-header {
+                background-color: var(--primary-color);
+                color: var(--white);
+                padding: 25px 30px;
+                text-align: center;
+                position: relative;
+            }
+
+            .logo-area {
+                margin-bottom: 15px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+                background-color: var(--white);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .logo-img {
+                width: 60px;
+                height: 60px;
+                background-color: var(--primary-color);
+                border-radius: 50%;
+                position: relative;
+            }
+
+                .logo-img:before, .logo-img:after {
+                    content: '';
+                    position: absolute;
+                    background-color: var(--white);
+                }
+
+                .logo-img:before {
+                    width: 35px;
+                    height: 8px;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    border-radius: 4px;
+                }
+
+                .logo-img:after {
+                    width: 8px;
+                    height: 35px;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    border-radius: 4px;
+                }
+
+            .card-header h1 {
+                font-size: 28px;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            .card-header p {
+                opacity: 0.9;
+                font-size: 16px;
+            }
+
+            .card-body {
+                padding: 30px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+                .form-group label {
+                    display: block;
+                    font-weight: 500;
+                    margin-bottom: 8px;
+                    color: var(--text-color);
+                }
+
+            .form-control {
+                width: 100%;
+                padding: 12px 15px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 15px;
+                transition: border-color 0.3s, box-shadow 0.3s;
+            }
+
+                .form-control:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.2);
+                    outline: none;
+                }
+
+            .role-selector {
+                display: flex;
+                gap: 15px;
+                margin-top: 10px;
+            }
+
+            .role-option {
+                flex: 1;
+                position: relative;
+            }
+
+                .role-option input {
+                    position: absolute;
+                    opacity: 0;
+                    cursor: pointer;
+                }
+
+                .role-option label {
+                    display: block;
+                    text-align: center;
+                    padding: 12px;
+                    background-color: var(--secondary-color);
+                    border-radius: 6px;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    border: 2px solid transparent;
+                }
+
+                .role-option input:checked + label {
+                    background-color: var(--white);
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                    font-weight: 600;
+                    box-shadow: 0 3px 10px rgba(77, 166, 255, 0.2);
+                }
+
+            .submit-btn {
+                width: 100%;
+                background-color: var(--primary-color);
+                color: var(--white);
+                border: none;
+                padding: 14px;
+                font-size: 16px;
+                font-weight: 600;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                margin-top: 10px;
+            }
+
+                .submit-btn:hover {
+                    background-color: var(--accent-color);
+                }
+
+            .login-link {
+                text-align: center;
+                margin-top: 20px;
+                color: var(--light-text);
+            }
+
+                .login-link a {
+                    color: var(--primary-color);
+                    text-decoration: none;
+                    font-weight: 500;
+                }
+
+                    .login-link a:hover {
+                        text-decoration: underline;
+                    }
+
+            media (max-width: 576px) {
+                .role-selector
+
+            {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .card-header h1 {
+                font-size: 24px;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="registration-card">
+                <div class="card-header">
+                    <div class="logo-area">
+                        <div class="logo">
+                            <div class="logo-img"></div>
+                        </div>
+                    </div>
+                    <h1>SafeCycle</h1>
+                    <p>Create your account to get started</p>
+                </div>
+
+                <div class="card-body">
+                    <form id="registration-form">
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" class="form-control" placeholder="Enter your full name" name="FullName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" placeholder="Enter your email" name="Email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" class="form-control" placeholder="Choose a username" name="UserName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" name="Phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" class="form-control" placeholder="Create a password" name="Password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password" name="Password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Select Your Role</label>
+                            <div class="role-selector">
+        
+                                <div class="role-option">
+                                    <input type="radio" id="worker" name="Role" value="worker">
+                                    <label for="worker">Worker</label>
+                                </div>
+                                <div class="role-option">
+                                    <input type="radio" id="technician" name="Role" value="technician">
+                                    <label for="technician">Technician</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Create Account</button>
+
+                        <div class="login-link">
+                            Already have an account? <a href="~/Account/Login">Log in</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('registration-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                // Get form values
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                // Password validation
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+
+                // Get selected role
+                const selectedRole = document.querySelector('input[name="role"]:checked').value;
+
+                // Registration success message (Optional)
+                alert('Registration successful!');
+
+                // Redirect based on role with your page names
+                 if (selectedRole === 'worker') {
+                    window.location.href = './workerdashboard.html';
+                } else if (selectedRole === 'technician') {
+                    window.location.href = './technichandashboard.html';
+                } else {
+                    alert('No valid role selected!');
+                }
+            });
+        </script>
+
+
+    </body>
+    </html>
+}
