@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<capstone.Models.Machine>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Machines | Admin Dashboard – SafeCycle</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha512-t4GWSVZO1eC8BM339Xd7Uphw5s17a86tIZIj8qRxhnKub6WoyhnrxeCIMeAqBPgdZGlCcG2PrZjMc+Wr78+5X4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
-        /* Sidebar Styles */
         :root {
             --primary-color: #4da6ff;
             --primary-dark: #0066cc;
@@ -30,13 +30,25 @@
             --transition-speed: 0.3s;
         }
 
-        /* Layout Structure */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: var(--dark-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
         .layout-wrapper {
             display: flex;
             min-height: 100vh;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--white);
@@ -156,7 +168,6 @@
                 color: var(--white);
             }
 
-        /* Main Content Area */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -165,35 +176,6 @@
 
         .sidebar.collapsed + .main-content {
             margin-left: var(--sidebar-width-collapsed);
-        }
-
-        /* Responsive Styles for Sidebar */
-        @@media (max-width: 768px) {
-            .sidebar
-
-        {
-            transform: translateX(-100%);
-            position: fixed;
-            z-index: 1001;
-        }
-
-        .sidebar.mobile-active {
-            transform: translateX(0);
-        }
-
-        .main-content {
-            margin-left: 0 !important;
-        }
-
-        .menu-toggle {
-            display: block;
-        }
-
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f5f7;
         }
 
         .page-header {
@@ -251,7 +233,7 @@
 
             .btn-outline-primary:hover {
                 background-color: #0d6efd;
-                border-color: #0d6efd;
+                color: white;
             }
 
         .avatar {
@@ -271,14 +253,54 @@
             color: white;
         }
 
-        .close {
-            color: white;
+        .btn-close-white {
+            filter: invert(1);
         }
 
-        .badge-pending {
-            background-color: rgba(255, 198, 0, 0.1);
-            color: #ffc600;
+        .badge-active {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
             padding: 0.4rem 0.7rem;
+        }
+
+        .badge-inactive {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+            padding: 0.4rem 0.7rem;
+        }
+
+        .badge-maintenance {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            padding: 0.4rem 0.7rem;
+        }
+
+        .menu-toggle {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            margin-right: 15px;
+            display: none;
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1001;
+            }
+
+                .sidebar.mobile-active {
+                    transform: translateX(0);
+                }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+
+            .menu-toggle {
+                display: block !important;
+            }
         }
     </style>
 </head>
@@ -292,37 +314,36 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="./admindashboard.html" class="sidebar-item active">
+                <a asp-action="AdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
-                <a href="./machineManagmentAdmin.html" class="sidebar-item">
+                <a asp-action="MachineManagmentAdmin" asp-controller="Admin" class="sidebar-item active">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">Machine Management</span>
-                    <span class="badge">4</span>
+                    <span class="badge">@Model.Count()</span>
                 </a>
-                <a href="./MaintenanceAdminDshboard.html" class="sidebar-item">
+                <a asp-action="MaintenanceAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance</span>
                     <span class="badge">7</span>
                 </a>
-                <a href="./EmployeesAdminDashboard.html" class="sidebar-item">
+                <a asp-action="EmployeesAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-users"></i>
                     <span class="sidebar-item-text">Workers / Technicians</span>
                 </a>
-                <a href="./SparePartsAdminDashboard/SparePartsAdmin" class="sidebar-item">
+                <a asp-action="SparePartsAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-boxes"></i>
                     <span class="sidebar-item-text">Spare Parts Inventory</span>
                     <span class="badge">3</span>
                 </a>
                 <div class="sidebar-heading">Records</div>
-                <a href="./CleaningLogsAdminDashboard.html" class="sidebar-item">
+                <a asp-action="CleaningLogsAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-clipboard-list"></i>
                     <span class="sidebar-item-text">Cleaning Logs</span>
                 </a>
-
                 <div class="sidebar-heading">System</div>
-                <a href="./SystemSettingsAdminDashboard.html" class="sidebar-item">
+                <a asp-action="SystemSettingsAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-cog"></i>
                     <span class="sidebar-item-text">System Settings</span>
                 </a>
@@ -331,9 +352,9 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
         </aside>
-        <!-- Your main content div -->
+
+        <!-- Main Content -->
         <div class="main-content">
-            <!-- Your page content here -->
             <!-- Header Section -->
             <header class="page-header">
                 <div class="container">
@@ -342,12 +363,15 @@
                             <h1 class="h4 mb-1">Machines</h1>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb small mb-0">
-                                    <li class="breadcrumb-item"><a href="./admindashboard.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a asp-action="AdminDashboard" asp-controller="Admin">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Machines</li>
                                 </ol>
                             </nav>
                         </div>
                         <div class="col-lg-6 text-end">
+                            <div class="menu-toggle" id="menu-toggle">
+                                <i class="fas fa-bars"></i>
+                            </div>
                             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addMachineModal">
                                 <i class="fas fa-plus me-1"></i> Add Machine
                             </button>
@@ -358,6 +382,21 @@
 
             <!-- Main Content -->
             <div class="container py-4">
+                <!-- Success/Error Messages -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
                 <!-- Tab Navigation -->
                 <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
@@ -370,7 +409,6 @@
 
                 <!-- Tab Content -->
                 <div class="tab-content" id="settingsTabContent">
-
                     <!-- All Machines -->
                     <div class="tab-pane fade show active" id="all-machines" role="tabpanel">
                         <div class="table-card">
@@ -381,7 +419,7 @@
                                             <span class="input-group-text bg-white border-end-0">
                                                 <i class="fas fa-search text-muted"></i>
                                             </span>
-                                            <input type="text" class="form-control border-start-0" placeholder="Search by machine name...">
+                                            <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Search by machine name...">
                                         </div>
                                     </div>
                                     <div class="col-lg-8 d-flex justify-content-end gap-2">
@@ -401,7 +439,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle">
+                                <table class="table table-hover align-middle" id="machinesTable">
                                     <thead>
                                         <tr>
                                             <th scope="col">Machine ID</th>
@@ -414,52 +452,48 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var x in Model)
+                                        @if (Model.Any())
+                                        {
+                                            foreach (var machine in Model)
+                                            {
+                                                <tr data-machine-id="@machine.MachineId">
+                                                    <td>@machine.MachineId</td>
+                                                    <td>@machine.Name</td>
+                                                    <td>@machine.SerialNumber</td>
+                                                    <td>@machine.Location</td>
+                                                    <td>
+                                                        <span class="badge @(machine.Status == "Active" ? "badge-active" : machine.Status == "Inactive" ? "badge-inactive" : "badge-maintenance")">
+                                                            @machine.Status
+                                                        </span>
+                                                    </td>
+                                                    <td>@machine.LastMaintenanceDate.ToString("MMM dd, yyyy")</td>
+                                                    <td class="text-end">
+                                                        <i class="action-icon" data-feather="edit" title="Edit" onclick="openEditModal(@machine.MachineId)"></i>
+                                                        <form asp-action="Delete" asp-controller="Admin" method="post" style="display:inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="id" value="@machine.MachineId" />
+                                                            <button type="submit" class="action-icon delete-btn" title="Delete" onclick="return confirm('Are you sure you want to delete @machine.Name?');">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
                                         {
                                             <tr>
-                                            <td>
-                                                @x.MachineId
-                                            </td>
-                                            <td>
-                                                @x.Name
-                                            </td>
-                                            <td>
-                                                @x.SerialNumber
-                                            </td>
-                                            <td>
-                                                @x.Location
-                                            </td>
-                                            <td>
-                                             <span class="badge bg-success">@x.Status</span>
-                                                
-                                            </td>
-                                            <td>
-                                                @x.LastMaintenanceDate
-                                            </td>
-                                        <td class="text-end">
-                                            <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editMachineModal" title="Edit"></i>
-                                                    <form method="post" action="/Admin/Delete/@x.MachineId" style="display:inline;">
-                                                        @Html.AntiForgeryToken()
-                                                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">
-                                                            <i class="fas fa-trash-alt"></i> 
-                                                        </button>
-                                                    </form>
-
-                                        </td>
+                                                <td colspan="7" class="text-center">No machines found.</td>
                                             </tr>
                                         }
-                
                                     </tbody>
                                 </table>
                             </div>
-                        
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <!-- Modals -->
             <!-- Add Machine Modal -->
             <div class="modal fade" id="addMachineModal" tabindex="-1" aria-labelledby="addMachineModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -469,18 +503,22 @@
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="addMachineModal" asp-action="Create" asp-controller="Admin" method="post">
+                            <form asp-action="Create" asp-controller="Admin" method="post" id="addMachineForm">
+                                @Html.AntiForgeryToken()
                                 <div class="mb-3">
                                     <label for="Name" class="form-label">Machine Name</label>
                                     <input type="text" class="form-control" name="Name" id="machineName" required>
+                                    <span class="text-danger validation-message" data-for="Name"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="SerialNumber" class="form-label">Serial Number</label>
                                     <input type="text" class="form-control" id="SerialNumber" name="SerialNumber" required>
+                                    <span class="text-danger validation-message" data-for="SerialNumber"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="LastMaintenanceDate" class="form-label">Last Maintenance Date</label>
                                     <input type="datetime-local" class="form-control" id="LastMaintenanceDate" name="LastMaintenanceDate" required>
+                                    <span class="text-danger validation-message" data-for="LastMaintenanceDate"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="Location" class="form-label">Location</label>
@@ -490,6 +528,7 @@
                                         <option value="Factory Floor 2">Factory Floor 2</option>
                                         <option value="Storage">Storage</option>
                                     </select>
+                                    <span class="text-danger validation-message" data-for="Location"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="Status" class="form-label">Status</label>
@@ -499,14 +538,14 @@
                                         <option value="Inactive">Inactive</option>
                                         <option value="Maintenance">Maintenance</option>
                                     </select>
+                                    <span class="text-danger validation-message" data-for="Status"></span>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary submit-button">Save Machine</button>
+                                    <button type="submit" class="btn btn-primary">Save Machine</button>
                                 </div>
                             </form>
                         </div>
-             
                     </div>
                 </div>
             </div>
@@ -520,94 +559,178 @@
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="editMachineForm">
-                                <div class="mb-3">
-                                    <label for="editMachineId" class="form-label">Machine ID</label>
-                                    <input type="text" class="form-control" id="editMachineId" readonly>
-                                </div>
+                            <form asp-action="Update" asp-controller="Admin" method="post" id="editMachineForm">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="MachineId" id="editMachineId" />
                                 <div class="mb-3">
                                     <label for="editMachineName" class="form-label">Machine Name</label>
-                                    <input type="text" class="form-control" id="editMachineName" required>
+                                    <input type="text" class="form-control" name="Name" id="editMachineName" required>
+                                    <span class="text-danger validation-message" data-for="Name"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editSerialNumber" class="form-label">Serial Number</label>
-                                    <input type="text" class="form-control" id="editSerialNumber" required>
+                                    <input type="text" class="form-control" name="SerialNumber" id="editSerialNumber" required>
+                                    <span class="text-danger validation-message" data-for="SerialNumber"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editLastMaintenanceDate" class="form-label">Last Maintenance Date</label>
+                                    <input type="datetime-local" class="form-control" name="LastMaintenanceDate" id="editLastMaintenanceDate" required>
+                                    <span class="text-danger validation-message" data-for="LastMaintenanceDate"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editLocation" class="form-label">Location</label>
-                                    <select class="form-select" id="editLocation" required>
+                                    <select name="Location" class="form-select" id="editLocation" required>
                                         <option value="">Select Location</option>
                                         <option value="Factory Floor 1">Factory Floor 1</option>
                                         <option value="Factory Floor 2">Factory Floor 2</option>
                                         <option value="Storage">Storage</option>
                                     </select>
+                                    <span class="text-danger validation-message" data-for="Location"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editStatus" class="form-label">Status</label>
-                                    <select class="form-select" id="editStatus" required>
+                                    <select name="Status" class="form-select" id="editStatus" required>
                                         <option value="">Select Status</option>
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                         <option value="Maintenance">Maintenance</option>
                                     </select>
+                                    <span class="text-danger validation-message" data-for="Status"></span>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
                                 </div>
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary" onclick="console.log('Machine updated')">Save Changes</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-            <script>
-                // Wait for the DOM to be fully loaded before running the script
-                document.addEventListener('DOMContentLoaded', function () {
-                  // Sidebar Toggle Functionality
-                  const sidebarToggle = document.getElementById('sidebar-toggle');
-                  const sidebar = document.getElementById('sidebar');
-                  const menuToggle = document.getElementById('menu-toggle');
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" integrity="sha512-VK2zcvntEufaimc+efOYj/f6v8e6639jJ2lO7eWkB3hW1GB3s6kpxeOozcT6AfB8A8g1g4g4g4g4g4g4g4g4g4==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sidebar Toggle Functionality
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
 
-                  if (sidebarToggle) {
-                    sidebarToggle.addEventListener('click', function () {
-                      sidebar.classList.toggle('collapsed');
-                    });
-                  }
-
-                  // Mobile Menu Toggle
-                  if (menuToggle) {
-                    menuToggle.addEventListener('click', function () {
-                      sidebar.classList.toggle('mobile-active');
-                    });
-                  }
-
-                  // Set active menu item based on current page
-                  const currentPageUrl = window.location.pathname;
-                  const sidebarItems = document.querySelectorAll('.sidebar-item');
-
-                  sidebarItems.forEach(item => {
-                    item.classList.remove('active');
-                    const itemUrl = item.getAttribute('href');
-                    if (itemUrl === currentPageUrl ||
-                      (currentPageUrl.endsWith('/index.html') && itemUrl === '#')) {
-                      item.classList.add('active');
-                    }
-                  });
-
-                  // Replace feather icons
-                  feather.replace();
-
-                  // Simulate delete confirmation
-                  window.confirmDelete = function (machineId) {
-                    if (confirm(`Are you sure you want to delete machine ${machineId}?`)) {
-                      // مكان حذف فعلي من السيرفر لو محتاجة
-                      console.log(`Machine ${machineId} deleted`);
-                    }
-                  };
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('collapsed');
                 });
-            </script>
+            }
 
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('mobile-active');
+                });
+            }
+
+            // Replace feather icons
+            feather.replace();
+
+            // Search and Filter Functionality
+            const searchInput = document.getElementById('searchInput');
+            const filterLocation = document.getElementById('filterLocation');
+            const filterStatus = document.getElementById('filterStatus');
+            const tableRows = document.querySelectorAll('#machinesTable tbody tr');
+
+            function filterTable() {
+                const searchText = searchInput.value.toLowerCase();
+                const locationFilter = filterLocation.value;
+                const statusFilter = filterStatus.value;
+
+                tableRows.forEach(row => {
+                    const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                    const location = row.querySelector('td:nth-child(4)').textContent;
+                    const status = row.querySelector('td:nth-child(5) .badge').textContent;
+
+                    const matchesSearch = name.includes(searchText);
+                    const matchesLocation = !locationFilter || location === locationFilter;
+                    const matchesStatus = !statusFilter || status === statusFilter;
+
+                    row.style.display = matchesSearch && matchesLocation && matchesStatus ? '' : 'none';
+                });
+            }
+
+            searchInput.addEventListener('input', filterTable);
+            filterLocation.addEventListener('change', filterTable);
+            filterStatus.addEventListener('change', filterTable);
+
+            // Open Edit Modal and Populate Data
+            window.openEditModal = function (machineId) {
+                $.ajax({
+                    url: '/Admin/Edit/' + machineId,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#editMachineId').val(data.machineId);
+                        $('#editMachineName').val(data.name);
+                        $('#editSerialNumber').val(data.serialNumber);
+                        $('#editLastMaintenanceDate').val(new Date(data.lastMaintenanceDate).toISOString().slice(0, 16));
+                        $('#editLocation').val(data.location);
+                        $('#editStatus').val(data.status);
+                        $('#editMachineModal').modal('show');
+                    },
+                    error: function () {
+                        alert('Error loading machine data.');
+                    }
+                });
+            };
+
+            // Form Validation for Add Machine Form
+            $('#addMachineForm').validate({
+                rules: {
+                    Name: { required: true },
+                    SerialNumber: { required: true },
+                    Location: { required: true },
+                    Status: { required: true },
+                    LastMaintenanceDate: { required: true }
+                },
+                messages: {
+                    Name: "Please enter the machine name.",
+                    SerialNumber: "Please enter the serial number.",
+                    Location: "Please select a location.",
+                    Status: "Please select a status.",
+                    LastMaintenanceDate: "Please select the last maintenance date."
+                },
+                errorElement: 'span',
+                errorClass: 'text-danger validation-message',
+                errorPlacement: function (error, element) {
+                    error.addClass('text-danger');
+                    error.insertAfter(element);
+                }
+            });
+
+            // Form Validation for Edit Machine Form
+            $('#editMachineForm').validate({
+                rules: {
+                    Name: { required: true },
+                    SerialNumber: { required: true },
+                    Location: { required: true },
+                    Status: { required: true },
+                    LastMaintenanceDate: { required: true }
+                },
+                messages: {
+                    Name: "Please enter the machine name.",
+                    SerialNumber: "Please enter the serial number.",
+                    Location: "Please select a location.",
+                    Status: "Please select a status.",
+                    LastMaintenanceDate: "Please select the last maintenance date."
+                },
+                errorElement: 'span',
+                errorClass: 'text-danger validation-message',
+                errorPlacement: function (error, element) {
+                    error.addClass('text-danger');
+                    error.insertAfter(element);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
