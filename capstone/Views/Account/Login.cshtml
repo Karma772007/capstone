@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout=null;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -224,42 +227,34 @@
         </div>
 
         <div class="login-form">
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
-                </div>
+            <div class="login-form">
+                <form id="login-form" asp-action="Login" asp-controller="Account" method="post">
+                    <input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()" />
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
-                </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                    </div>
 
-                <button type="submit" class="login-btn">Sign In</button>
+                    @if (TempData["Error"] != null)
+                    {
+                        <div style="color: red; margin-bottom: 15px;">
+                            @TempData["Error"]
+                        </div>
+                    }
 
-                <div class="register-link">
-                    Don't have an account? <a href="~/Account/Register">Register now</a>
-                </div>
-            </form>
+                    <button type="submit" class="login-btn">Sign In</button>
+
+                    <div class="register-link">
+                        Don't have an account? <a asp-action="Register" asp-controller="Account">Register now</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('login-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            // Login logic would go here
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // Basic validation example
-            if (email && password) {
-                alert('Login successful!');
-                // Redirect logic would go here
-            } else {
-                alert('Please fill in all fields');
-            }
-        });
-    </script>
 </body>
 </html>
