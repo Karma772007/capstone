@@ -2,6 +2,8 @@
 using capstone.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace capstone.Controllers
 {
@@ -14,32 +16,94 @@ namespace capstone.Controllers
             _context = context;
         }
 
-        // عرض صفحة إدارة الماكينات
-        public IActionResult MachineManagmentAdmin()
+        public async Task<IActionResult> MachineManagmentAdmin()
         {
-            var machines = _context.Machines.ToList();
+            var machines = await _context.Machines.ToListAsync();
             return View(machines);
         }
 
-        // إضافة ماكينة جديدة
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Machine machine)
+        public async Task<IActionResult> Create(Machine machine)
         {
             if (!ModelState.IsValid)
             {
-                // ترجع لنفس الصفحة مع عرض الماكينات لو في خطأ
-                var machines = _context.Machines.ToList();
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                TempData["ErrorMessage"] = string.Join("; ", errors);
+                var machines = await _context.Machines.ToListAsync();
                 return View("MachineManagmentAdmin", machines);
             }
 
-            _context.Machines.Add(machine);
-            _context.SaveChanges();
+            try
+            {
+                _context.Machines.Add(machine);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Machine added successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error saving machine: {ex.Message}";
+                var machines = await _context.Machines.ToListAsync();
+                return View("MachineManagmentAdmin", machines);
+            }
 
-            return RedirectToAction("MachineManagmentAdmin");
+            return RedirectToAction(nameof(MachineManagmentAdmin));
         }
 
-        // حذف ماكينة
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var machine = await _context.Machines.FindAsync(id);
+            if (machine == null)
+            {
+                TempData["ErrorMessage"] = "Machine not found.";
+                return RedirectToAction(nameof(MachineManagmentAdmin));
+            }
+
+            return Json(machine);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Machine machine)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                TempData["ErrorMessage"] = string.Join("; ", errors);
+                var machines = await _context.Machines.ToListAsync();
+                return View("MachineManagmentAdmin", machines);
+            }
+
+            try
+            {
+                var existingMachine = await _context.Machines.FindAsync(machine.MachineId);
+                if (existingMachine == null)
+                {
+                    TempData["ErrorMessage"] = "Machine not found.";
+                    return RedirectToAction(nameof(MachineManagmentAdmin));
+                }
+
+                existingMachine.Name = machine.Name;
+                existingMachine.SerialNumber = machine.SerialNumber;
+                existingMachine.Location = machine.Location;
+                existingMachine.Status = machine.Status;
+                existingMachine.LastMaintenanceDate = machine.LastMaintenanceDate;
+
+                _context.Machines.Update(existingMachine);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Machine updated successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error updating machine: {ex.Message}";
+                var machines = await _context.Machines.ToListAsync();
+                return View("MachineManagmentAdmin", machines);
+            }
+
+            return RedirectToAction(nameof(MachineManagmentAdmin));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -51,18 +115,18 @@ namespace capstone.Controllers
                 return RedirectToAction(nameof(MachineManagmentAdmin));
             }
 
-            _context.Machines.Remove(machine);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Machines.Remove(machine);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Machine deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error deleting machine: {ex.Message}";
+            }
 
-            TempData["SuccessMessage"] = "Machine deleted successfully.";
             return RedirectToAction(nameof(MachineManagmentAdmin));
         }
-
-        public IActionResult CleaningLogsAdminDashboard()
-        {
-            var clean = _context.Cleaninglogs.ToList();
-            return View(clean);
-        }
-
     }
 }
