@@ -12,8 +12,8 @@ using capstone.data;
 namespace capstone.Migrations
 {
     [DbContext(typeof(Projectcontext))]
-    [Migration("20250507174127_hgt")]
-    partial class hgt
+    [Migration("20250507212138_ytu")]
+    partial class ytu
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

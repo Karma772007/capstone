@@ -5,7 +5,7 @@
 namespace capstone.Migrations
 {
     /// <inheritdoc />
-    public partial class hgt : Migration
+    public partial class iui : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
