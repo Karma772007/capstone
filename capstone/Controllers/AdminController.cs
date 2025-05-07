@@ -58,11 +58,6 @@ namespace capstone.Controllers
             return RedirectToAction(nameof(MachineManagmentAdmin));
         }
 
-        public IActionResult CleaningLogsAdminDashboard()
-        {
-            var clean = _context.Cleaninglogs.ToList();
-            return View(clean);
-        }
 
     }
 }

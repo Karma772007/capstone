@@ -168,26 +168,23 @@
 
         /* Responsive Styles for Sidebar */
         @@media (max-width: 768px) {
-            .sidebar
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1001;
+            }
 
-        {
-            transform: translateX(-100%);
-            position: fixed;
-            z-index: 1001;
-        }
+                .sidebar.mobile-active {
+                    transform: translateX(0);
+                }
 
-        .sidebar.mobile-active {
-            transform: translateX(0);
-        }
+            .main-content {
+                margin-left: 0 !important;
+            }
 
-        .main-content {
-            margin-left: 0 !important;
-        }
-
-        .menu-toggle {
-            display: block;
-        }
-
+            .menu-toggle {
+                display: block;
+            }
         }
 
         :root {
@@ -498,12 +495,12 @@
                                                     <span class="badge bg-success">@x.Status</span>
 
                                                 </td>
-                                              
+
                                                 <td class="text-end">
                                                     <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editMachineModal" title="Edit"></i>
-                                                    <form method="post" action="/Admin/Delete/@x.LogID" style="display:inline;">
+                                                    <form method="post" action="/CleaningLogs/Delete/@x.LogID" style="display:inline;">
                                                         @Html.AntiForgeryToken()
-                                                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">
+                                                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this Log?');">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </form>
@@ -513,7 +510,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
 
                         </div>
                     </div>
@@ -667,7 +664,16 @@
                                   document.getElementById('filterDate').value = '';
                                 });
                               }
+                                // delete
+                                     window.confirmDelete = function (LogID) {
+                            if (confirm(`Are you sure you want to delete Log ${LogID}?`)) {
+                              // مكان حذف فعلي من السيرفر لو محتاجة
+                              console.log(`CleaningLog ${LogID} deleted`);
+                            }
+                          };
                             });
+                          
+                        
                     </script>
 </body>
 </html>
