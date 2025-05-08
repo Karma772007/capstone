@@ -368,7 +368,7 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="~/Admin/admindashboard" class="sidebar-item active">
+                <a href="~/Admin/admindashboard" class="sidebar-item ">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
@@ -382,7 +382,7 @@
                     <span class="sidebar-item-text">Maintenance</span>
                     <span class="badge">7</span>
                 </a>
-                <a href="~/WorkerAdmin/WorkerAdminDashboard" class="sidebar-item">
+                <a href="~/WorkerAdmin/WorkerAdminDashboard" class="sidebar-item active">
                     <i class="fas fa-users"></i>
                     <span class="sidebar-item-text">Workers / Technicians</span>
                 </a>
@@ -597,9 +597,9 @@
                                                 <td>
                                                     @x.UserName
                                                 </td>
+                                                
                                                 <td class="text-end">
-                                                    <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editMachineModal" title="Edit"></i>
-                                                  
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen me-1"></i>Edit</button>
                                                 </td>
                                             </tr>
                                         }
@@ -799,95 +799,51 @@
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="addPersonnelForm">
+                            <form asp-action="Create" asp-controller="WorkerAdmin" id="addPersonnelForm">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="personnelRole" class="form-label">Role</label>
-                                        <select class="form-select" id="personnelRole" required>
+                                        <select class="form-select" id="personnelRole" name="Role" required>
                                             <option value="">Select Role</option>
                                             <option value="worker">Worker</option>
                                             <option value="technician">Technician</option>
-                                            <option value="supervisor">Supervisor</option>
+                                            <option value="admin">Admin</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="personnelStatus" class="form-label">Status</label>
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="personnelStatus" checked>
-                                            <label class="form-check-label" for="personnelStatus">Active</label>
-                                        </div>
-                                    </div>
+                                  
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="firstName" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="firstName" required>
+                                        <label for="FullName" class="form-label">Full Name</label>
+                                        <input type="text" name="FullName" class="form-control" id="FullName" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="lastName" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="lastName" required>
+                                        <label for="UserName" class="form-label">User Name</label>
+                                        <input type="text" name="UserName" class="form-control" id="UserName" required>
                                     </div>
                                 </div>
+                                
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="personnelID" class="form-label">Personnel ID</label>
-                                        <input type="text" class="form-control" id="personnelID" placeholder="Auto-generated" disabled>
+                                        <label for="Phone" class="form-label">Phone Number</label>
+                                        <input type="tel" name="Phone" class="form-control" id="Phone">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="location" class="form-label">Location</label>
-                                        <select class="form-select" id="location" required>
-                                            <option value="">Select Location</option>
-                                            <option value="site-a">Site A</option>
-                                            <option value="site-b">Site B</option>
-                                            <option value="warehouse">Warehouse</option>
-                                        </select>
+                                        <label for="Email" class="form-label">Email</label>
+                                        <input type="email" name="Email" class="form-control" id="Email">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="Password" class="form-label">Password</label>
+                                        <input type="text" name="Password" class="form-control" id="Password">
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="phoneNumber" class="form-label">Phone Number</label>
-                                        <input type="tel" class="form-control" id="phoneNumber">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="experience" class="form-label">Experience (Years)</label>
-                                        <input type="number" class="form-control" id="experience" min="0" max="50">
-                                    </div>
-                                    <div class="col-md-6" id="certificationContainer">
-                                        <label for="certification" class="form-label">Certification</label>
-                                        <select class="form-select" id="certification">
-                                            <option value="">Select Certification</option>
-                                            <option value="heavy-machinery">Heavy Machinery</option>
-                                            <option value="safety-officer">Safety Officer</option>
-                                            <option value="forklift">Forklift Operator</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6" id="specializationContainer" style="display: none;">
-                                        <label for="specialization" class="form-label">Specialization</label>
-                                        <select class="form-select" id="specialization">
-                                            <option value="">Select Specialization</option>
-                                            <option value="electrical">Electrical</option>
-                                            <option value="mechanical">Mechanical</option>
-                                            <option value="hydraulic">Hydraulics</option>
-                                            <option value="electronics">Electronics</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="notes" class="form-label">Additional Notes</label>
-                                    <textarea class="form-control" id="notes" rows="3"></textarea>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" id="savePersonnel">Save Personnel</button>
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary" id="savePersonnel">Save Personnel</button>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -1070,22 +1026,20 @@
             <!-- Scripts -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
             <script>
-                        // Wait for the DOM to be fully loaded before running the script
-                document.addEventListener('DOMContentLoaded', function() {
+                document.addEventListener('DOMContentLoaded', function () {
                     // Sidebar Toggle Functionality
                     const sidebarToggle = document.getElementById('sidebar-toggle');
                     const sidebar = document.getElementById('sidebar');
                     const menuToggle = document.getElementById('menu-toggle');
 
                     if (sidebarToggle) {
-                        sidebarToggle.addEventListener('click', function() {
+                        sidebarToggle.addEventListener('click', function () {
                             sidebar.classList.toggle('collapsed');
                         });
                     }
 
-                    // Mobile Menu Toggle
                     if (menuToggle) {
-                        menuToggle.addEventListener('click', function() {
+                        menuToggle.addEventListener('click', function () {
                             sidebar.classList.toggle('mobile-active');
                         });
                     }
@@ -1095,180 +1049,75 @@
                     const sidebarItems = document.querySelectorAll('.sidebar-item');
 
                     sidebarItems.forEach(item => {
-                        // Remove active class from all items first
                         item.classList.remove('active');
-
-                        // Compare the href with the current page URL
                         const itemUrl = item.getAttribute('href');
-
-                        // Check if the current page matches this menu item
                         if (itemUrl === currentPageUrl ||
                             (currentPageUrl.endsWith('/index.html') && itemUrl === '#')) {
                             item.classList.add('active');
                         }
                     });
-                });
-                        // Initialize tooltips and popovers
-                        document.addEventListener("DOMContentLoaded", function() {
-                            // Show dynamic content based on role selection
-                            const personnelRoleSelect = document.getElementById('personnelRole');
-                            const certificationContainer = document.getElementById('certificationContainer');
-                            const specializationContainer = document.getElementById('specializationContainer');
 
-                            if (personnelRoleSelect) {
-                                personnelRoleSelect.addEventListener('change', function() {
-                                    if (this.value === 'worker') {
-                                        certificationContainer.style.display = 'block';
-                                        specializationContainer.style.display = 'none';
-                                    } else if (this.value === 'technician') {
-                                        certificationContainer.style.display = 'none';
-                                        specializationContainer.style.display = 'block';
-                                    } else {
-                                        certificationContainer.style.display = 'block';
-                                        specializationContainer.style.display = 'none';
-                                    }
-                                });
-                            }
+                    // Role-based UI display (certification/specialization)
+                    const personnelRoleSelect = document.getElementById('personnelRole');
+                    const certificationContainer = document.getElementById('certificationContainer');
+                    const specializationContainer = document.getElementById('specializationContainer');
 
-                            // Handle select all checkbox
-                            const selectAllCheckbox = document.getElementById('selectAll');
-                            if (selectAllCheckbox) {
-                                selectAllCheckbox.addEventListener('change', function() {
-                                    const checkboxes = document.querySelectorAll('.personnel-checkbox');
-                                    checkboxes.forEach(checkbox => {
-                                        checkbox.checked = this.checked;
-                                    });
-                                });
-                            }
-
-                            // Handle assign task button clicks
-                            const assignButtons = document.querySelectorAll('.btn-assign');
-                            assignButtons.forEach(button => {
-                                button.addEventListener('click', function() {
-                                    const id = this.getAttribute('data-id');
-                                    const name = this.getAttribute('data-name');
-                                    const role = this.getAttribute('data-role');
-
-                                    document.getElementById('assignPersonnelName').textContent = name;
-                                    document.getElementById('assignPersonnelID').textContent = `ID: ${id}`;
-
-                                    const assignTaskModal = new bootstrap.Modal(document.getElementById('assignTaskModal'));
-                                    assignTaskModal.show();
-                                });
-                            });
-
-                            // Handle edit button clicks
-                            const editButtons = document.querySelectorAll('.btn-edit');
-                            editButtons.forEach(button => {
-                                button.addEventListener('click', function() {
-                                    const id = this.getAttribute('data-id');
-
-                                    // In a real application, you would fetch personnel details from API
-                                    // For demo purposes, we'll pre-fill with dummy data
-                                    document.getElementById('editPersonnelID').value = id;
-
-                                    if (id === 'W001') {
-                                        document.getElementById('editFirstName').value = 'John';
-                                        document.getElementById('editLastName').value = 'Doe';
-                                        document.getElementById('editRole').value = 'worker';
-                                        document.getElementById('editLocation').value = 'site-a';
-                                        document.getElementById('editExperience').value = '3';
-                                        document.getElementById('editCertification').value = 'heavy-machinery';
-                                    } else if (id === 'T001') {
-                                        document.getElementById('editFirstName').value = 'Anna';
-                                        document.getElementById('editLastName').value = 'Smith';
-                                        document.getElementById('editRole').value = 'technician';
-                                        document.getElementById('editLocation').value = 'site-b';
-                                        document.getElementById('editExperience').value = '5';
-                                        document.getElementById('editCertification').value = '';
-                                    }
-
-                                    const editPersonnelModal = new bootstrap.Modal(document.getElementById('editPersonnelModal'));
-                                    editPersonnelModal.show();
-                                });
-                            });
-
-                            // Handle save task button
-                            const saveTaskBtn = document.getElementById('saveTask');
-                            if (saveTaskBtn) {
-                                saveTaskBtn.addEventListener('click', function() {
-                                    // In a real application, you would save the task details to an API
-
-                                    // Close modal
-                                    const modal = bootstrap.Modal.getInstance(document.getElementById('assignTaskModal'));
-                                    modal.hide();
-
-                                    // Show success toast
-                                    document.getElementById('toastMessage').textContent = 'Task assigned successfully!';
-                                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                                    toast.show();
-                                });
-                            }
-
-                            // Handle save personnel button
-                            const savePersonnelBtn = document.getElementById('savePersonnel');
-                            if (savePersonnelBtn) {
-                                savePersonnelBtn.addEventListener('click', function() {
-                                    // In a real application, you would save the personnel details to an API
-
-                                    // Close modal
-                                    const modal = bootstrap.Modal.getInstance(document.getElementById('addPersonnelModal'));
-                                    modal.hide();
-
-                                    // Show success toast
-                                    document.getElementById('toastMessage').textContent = 'Personnel added successfully!';
-                                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                                    toast.show();
-                                });
-                            }
-
-                            // Handle update personnel button
-                            const updatePersonnelBtn = document.getElementById('updatePersonnel');
-                            if (updatePersonnelBtn) {
-                                updatePersonnelBtn.addEventListener('click', function() {
-                                    // In a real application, you would update the personnel details via an API
-
-                                    // Close modal
-                                    const modal = bootstrap.Modal.getInstance(document.getElementById('editPersonnelModal'));
-                                    modal.hide();
-
-                                    // Show success toast
-                                    document.getElementById('toastMessage').textContent = 'Personnel updated successfully!';
-                                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                                    toast.show();
-                                });
-                            }
-
-                            // Handle delete personnel button
-                            const deletePersonnelBtn = document.getElementById('deletePersonnel');
-                            if (deletePersonnelBtn) {
-                                deletePersonnelBtn.addEventListener('click', function() {
-                                    if (confirm('Are you sure you want to delete this personnel record? This action cannot be undone.')) {
-                                        // In a real application, you would delete the personnel via an API
-
-                                        // Close modal
-                                        const modal = bootstrap.Modal.getInstance(document.getElementById('editPersonnelModal'));
-                                        modal.hide();
-
-                                        // Show success toast
-                                        document.getElementById('toastMessage').textContent = 'Personnel deleted successfully!';
-                                        const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                                        toast.show();
-                                    }
-                                });
-                            }
-
-                            // Handle filter reset button
-                            const resetFiltersBtn = document.getElementById('resetFilters');
-                            if (resetFiltersBtn) {
-                                resetFiltersBtn.addEventListener('click', function() {
-                                    document.getElementById('filterRole').value = '';
-                                    document.getElementById('filterStatus').value = '';
-                                    document.getElementById('filterLocation').value = '';
-                                    document.getElementById('searchPersonnel').value = '';
-                                });
+                    if (personnelRoleSelect) {
+                        personnelRoleSelect.addEventListener('change', function () {
+                            if (this.value === 'worker') {
+                                certificationContainer.style.display = 'block';
+                                specializationContainer.style.display = 'none';
+                            } else if (this.value === 'technician') {
+                                certificationContainer.style.display = 'none';
+                                specializationContainer.style.display = 'block';
+                            } else {
+                                certificationContainer.style.display = 'block';
+                                specializationContainer.style.display = 'none';
                             }
                         });
+                    }
+
+                    // Select all checkboxes
+                    const selectAllCheckbox = document.getElementById('selectAll');
+                    if (selectAllCheckbox) {
+                        selectAllCheckbox.addEventListener('change', function () {
+                            const checkboxes = document.querySelectorAll('.personnel-checkbox');
+                            checkboxes.forEach(checkbox => {
+                                checkbox.checked = this.checked;
+                            });
+                        });
+                    }
+
+                    // Assign Task Modal
+                    const assignButtons = document.querySelectorAll('.btn-assign');
+                    assignButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const assignTaskModal = new bootstrap.Modal(document.getElementById('assignTaskModal'));
+                            assignTaskModal.show();
+                        });
+                    });
+
+                    // Edit Personnel Modal
+                    const editButtons = document.querySelectorAll('.btn-edit');
+                    editButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const editPersonnelModal = new bootstrap.Modal(document.getElementById('editPersonnelModal'));
+                            editPersonnelModal.show();
+                        });
+                    });
+
+                    // Reset Filters
+                    const resetFiltersBtn = document.getElementById('resetFilters');
+                    if (resetFiltersBtn) {
+                        resetFiltersBtn.addEventListener('click', function () {
+                            document.getElementById('filterRole').value = '';
+                            document.getElementById('filterStatus').value = '';
+                            document.getElementById('filterLocation').value = '';
+                            document.getElementById('searchPersonnel').value = '';
+                        });
+                    }
+                });
             </script>
+
 </body>
 </html>

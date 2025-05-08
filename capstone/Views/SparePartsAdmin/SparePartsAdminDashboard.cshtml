@@ -371,7 +371,7 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="~/Admin/admindashboard" class="sidebar-item active">
+                <a href="~/Admin/admindashboard" class="sidebar-item ">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
@@ -389,7 +389,7 @@
                     <i class="fas fa-users"></i>
                     <span class="sidebar-item-text">Workers / Technicians</span>
                 </a>
-                <a href="~/SparePartsAdmin/SparePartsAdminDashboard" class="sidebar-item">
+                <a href="~/SparePartsAdmin/SparePartsAdminDashboard" class="sidebar-item active">
                     <i class="fas fa-boxes"></i>
                     <span class="sidebar-item-text">Spare Parts Inventory</span>
                     <span class="badge">3</span>
@@ -593,43 +593,34 @@
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="addPartForm">
+                            <form asp-action="Create" asp-controller="SparePartsAdmin" id="addPartForm">
                                 <div class="mb-3">
-                                    <label for="partName" class="form-label">Part Name</label>
-                                    <input type="text" class="form-control" id="partName" required>
+                                    <label for="PartName" class="form-label">Part Name</label>
+                                    <input type="text" name="PartName" class="form-control" id="PartName" required>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="quantity" class="form-label">Quantity in Stock</label>
-                                        <input type="number" class="form-control" id="quantity" min="0" required>
+                                        <label for="QuantityInStock" class="form-label">Quantity in Stock</label>
+                                        <input type="number" name="QuantityInStock" class="form-control" id="QuantityInStock" min="0" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="minimumRequired" class="form-label">Minimum Required</label>
-                                        <input type="number" class="form-control" id="minimumRequired" min="0" required>
+                                        <label for="MinimumRequired" class="form-label">Minimum Required</label>
+                                        <input type="number" name="MinimumRequired" class="form-control" id="MinimumRequired" min="0" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="machineUsed" class="form-label">Machine Used In</label>
-                                    <select class="form-select" id="machineUsed" required>
-                                        <option value="">Select Machine</option>
-                                        <option value="cnc-milling-machine">CNC Milling Machine</option>
-                                        <option value="laser-cutter">Laser Cutter</option>
-                                        <option value="injection-molding-machine">Injection Molding Machine</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" id="status" required>
+                                    <label for="ReorderStatus" class="form-label">Status</label>
+                                    <select name="ReorderStatus" class="form-select" id="ReorderStatus" required>
                                         <option value="in-stock">In Stock</option>
                                         <option value="low-stock">Low Stock</option>
                                         <option value="out-of-stock">Out of Stock</option>
                                     </select>
                                 </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" id="savePart">Save Part</button>
+                                </div>
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary" id="savePart">Save Part</button>
                         </div>
                     </div>
                 </div>
@@ -752,28 +743,7 @@
                         });
                       }
 
-                      // Handle add part button
-                      const savePartBtn = document.getElementById('savePart');
-                      if (savePartBtn) {
-                        savePartBtn.addEventListener('click', function () {
-                          const partName = document.getElementById('partName').value;
-                          const quantity = document.getElementById('quantity').value;
-                          const minimumRequired = document.getElementById('minimumRequired').value;
-                          const machineUsed = document.getElementById('machineUsed').value;
-                          const status = document.getElementById('status').value;
-
-                          // Simulate saving part
-                          alert(`Part "${partName}" saved successfully!`);
-                          const modal = bootstrap.Modal.getInstance(document.getElementById('addPartModal'));
-                          modal.hide();
-
-                          // Show success toast
-                          document.getElementById('toastMessage').textContent = 'Spare part added successfully!';
-                          const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                          toast.show();
-                        });
-                      }
-
+                    
                       // Handle edit part button
                       const updatePartBtn = document.getElementById('updatePart');
                       if (updatePartBtn) {

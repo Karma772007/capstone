@@ -1,4 +1,5 @@
 ﻿using capstone.data;
+using capstone.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace capstone.Controllers
@@ -17,6 +18,14 @@ namespace capstone.Controllers
             var machines = _context.Users.ToList();
             return View(machines);
         }
+
+        public IActionResult Create(User user)
+        {
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return RedirectToAction("WorkerAdminDashboard");
+        }
+
 
 
     }

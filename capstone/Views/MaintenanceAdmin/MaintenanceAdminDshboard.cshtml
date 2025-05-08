@@ -374,7 +374,7 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="~/Admin/admindashboard" class="sidebar-item active">
+                <a href="~/Admin/admindashboard" class="sidebar-item">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
@@ -383,7 +383,7 @@
                     <span class="sidebar-item-text">Machine Management</span>
                     <span class="badge">4</span>
                 </a>
-                <a href="~/MaintenanceAdmin/MaintenanceAdminDshboard" class="sidebar-item">
+                <a href="~/MaintenanceAdmin/MaintenanceAdminDshboard" class="sidebar-item active">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance</span>
                     <span class="badge">7</span>
@@ -429,7 +429,7 @@
                             <h1 class="h4 mb-1">Maintenance Management</h1>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb small mb-0">
-                                    <li class="breadcrumb-item"><a href="./admindashboard.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="~/Admin/machineManagmentAdmin">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Maintenance Management</li>
                                 </ol>
                             </nav>
@@ -438,16 +438,7 @@
                             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addMaintenanceModal">
                                 <i class="fas fa-plus me-1"></i> Add Maintenance Request
                             </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
-                                    <i class="fas fa-bars me-1"></i> Actions
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-export me-2"></i> Export Data</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i> Print Report</a></li>
-                                </ul>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -613,8 +604,7 @@
                                                     @x.CompletionDate
                                                 </td>
                                                 <td class="text-end">
-                                                    <button class="btn btn-sm btn-outline-primary btn-assign" data-id="REQ-002" data-machine="Laser Cutter" data-issue="Beam misalignment"><i class="fas fa-tasks me-1"></i>Assign</button>
-                                                    <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="REQ-002"><i class="fas fa-pen me-1"></i>Edit</button>
+                                                    <button type="button" class="btn btn-sm btn-primary" onclick="openEditModal(@x.HistoryID)">Edit</button>
                                                 </td>
                                                
                                             </tr>
@@ -759,48 +749,31 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addMaintenanceForm">
+                    <form asp-action="Create" asp-controller="MaintenanceAdmin" id="addMaintenanceForm">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="machineName" class="form-label">Machine Name</label>
-                                <select class="form-select" id="machineName" required>
-                                    <option value="">Select Machine</option>
-                                    <option value="machine-a">Machine A</option>
-                                    <option value="machine-b">Machine B</option>
-                                    <option value="machine-c">Machine C</option>
-                                </select>
+                                <label for="MachineID" class="form-label">Machine ID</label>
+                                <input type="number" class="form-control" name="MachineID" id="MachineID" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="reportedBy" class="form-label">Reported By</label>
-                                <input type="text" class="form-control" id="reportedBy" required>
+                                <label for="RepairDetails" class="form-label">RepairDetails</label>
+                                <input type="text" class="form-control" name="RepairDetails" id="RepairDetails" required>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="issueDescription" class="form-label">Issue Description</label>
-                                <textarea class="form-control" id="issueDescription" rows="3" required></textarea>
-                            </div>
-                        </div>
+                       
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="requestDate" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="requestDate" required>
+                                <label for="CompletionDate" class="form-label">Date</label>
+                                <input type="datetime-local" name="CompletionDate" class="form-control" id="CompletionDate" required>
                             </div>
-                            <div class="col-md-6">
-                                <label for="requestStatus" class="form-label">Status</label>
-                                <select class="form-select" id="requestStatus" required>
-                                    <option value="pending">Pending</option>
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                </select>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="saveRequest">Save Request</button>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveRequest">Save Request</button>
-                </div>
+               
             </div>
         </div>
     </div>
@@ -863,69 +836,39 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editRequestForm">
+                    <form asp-action="Update" asp-controller="MaintenanceAdmin" method="post" id="editRequestForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="HistoryID" id="editHistoryID" />
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="editRequestId" class="form-label">Request ID</label>
-                                <input type="text" class="form-control" id="editRequestId" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editMachineName" class="form-label">Machine Name</label>
-                                <select class="form-select" id="editMachineName" required>
-                                    <option value="">Select Machine</option>
-                                    <option value="machine-a">Machine A</option>
-                                    <option value="machine-b">Machine B</option>
-                                    <option value="machine-c">Machine C</option>
-                                </select>
+                                <label for="editMachineID" class="form-label">Machine ID</label>
+                                <input type="text" class="form-control" name="MachineID" id="editRequestId" readonly>
+                                <span class="text-danger validation-message" data-for="MachineID"></span>
+
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <label for="editIssueDescription" class="form-label">Issue Description</label>
-                                <textarea class="form-control" id="editIssueDescription" rows="3" required></textarea>
+                                <label for="editRepairDetails" class="form-label">Repair Details</label>
+                                <textarea class="form-control" name="RepairDetails" id="editRepairDetails" rows="3" required></textarea>
+                                <span class="text-danger validation-message" data-for="RepairDetails"></span>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="editReportedBy" class="form-label">Reported By</label>
-                                <input type="text" class="form-control" id="editReportedBy" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editRequestDate" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="editRequestDate" required>
+                                <label for="editCompletionDate" class="form-label">Date</label>
+                                <input type="datetime-local" name="CompletionDate" class="form-control" id="editCompletionDate" required>
+                                <span class="text-danger validation-message" data-for="CompletionDate"></span>
+
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="editRequestStatus" class="form-label">Status</label>
-                                <select class="form-select" id="editRequestStatus" required>
-                                    <option value="pending">Pending</option>
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editPriority" class="form-label">Priority</label>
-                                <select class="form-select" id="editPriority" required>
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                    <option value="critical">Critical</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="editNotes" class="form-label">Additional Notes</label>
-                                <textarea class="form-control" id="editNotes" rows="2"></textarea>
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="updateRequest">Update Request</button>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="updateRequest">Update Request</button>
-                </div>
+               
             </div>
         </div>
     </div>
@@ -1006,7 +949,7 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         // DOM Elements
@@ -1027,7 +970,6 @@
         sidebarToggle.addEventListener('click', function() {
           sidebar.classList.toggle('collapsed');
 
-          // Toggle icon direction
           const icon = this.querySelector('i');
           if (sidebar.classList.contains('collapsed')) {
             icon.classList.remove('fa-chevron-left');
@@ -1051,37 +993,72 @@
             });
           });
         }
+        // Function to open edit modal and populate data
+        function openEditModal(HistoryID) {
+            fetch(`/MaintenanceAdmin/Edit/${HistoryID}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Format the date for datetime-local input
+                    const formattedDate = new Date(data.completionDate).toISOString().slice(0, 16);
 
-        // Assign Buttons
-        assignButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-            const machine = this.getAttribute('data-machine');
-            const issue = this.getAttribute('data-issue');
+                    // Populate form fields
+                    document.getElementById('editHistoryID').value = data.historyID;
+                    document.getElementById('editMachineID').value = data.machineID;
+                    document.getElementById('editRepairDetails').value = data.repairDetails;
+                    document.getElementById('editCompletionDate').value = formattedDate;
 
-            // Set modal values
-            document.getElementById('assignRequestMachine').textContent = machine;
-            document.getElementById('assignRequestIssue').textContent = issue;
+                    // Show the modal
+                    const editModal = new bootstrap.Modal(document.getElementById('editRequestModal'));
+                    editModal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error loading maintenance data.');
+                });
+        }
 
-            // Show modal
-            const assignModal = new bootstrap.Modal(document.getElementById('assignTaskModal'));
-            assignModal.show();
-          });
+        // Handle form submission for update
+        document.getElementById('updateRequest').addEventListener('click', function() {
+            const formData = {
+                HistoryID: document.getElementById('editHistoryID').value,
+                MachineID: document.getElementById('editMachineID').value,
+                RepairDetails: document.getElementById('editRepairDetails').value,
+                CompletionDate: document.getElementById('editCompletionDate').value
+            };
+
+            fetch('/MaintenanceAdmin/Update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('تم تحديث طلب الصيانة بنجاح');
+                    location.reload();
+                } else {
+                    alert('خطأ: ' + (data.message || 'فشل تحديث طلب الصيانة'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('حدث خطأ أثناء تحديث طلب الصيانة');
+            });
         });
 
-        // Edit Buttons
-        editButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-
-            // For demo purposes, we'll just set the ID field
-            document.getElementById('editRequestId').value = id;
-
-            // Show modal
-            const editModal = new bootstrap.Modal(document.getElementById('editRequestModal'));
-            editModal.show();
-          });
-        });
 
         // Reset Filters
         if (resetFiltersBtn) {
@@ -1093,98 +1070,47 @@
           });
         }
 
-        // Save Request
-        if (saveRequestBtn) {
-          saveRequestBtn.addEventListener('click', function() {
-            // Validate form
-            const form = document.getElementById('addMaintenanceForm');
-            if (form.checkValidity()) {
-              // Process form data (in a real app, this would be sent to the server)
-              alert('Maintenance request created successfully!');
-
-              // Close modal and reset form
-              const modal = bootstrap.Modal.getInstance(document.getElementById('addMaintenanceModal'));
-              modal.hide();
-              form.reset();
-            } else {
-              // Trigger HTML5 validation
-              form.reportValidity();
-            }
-          });
-        }
-
-        // Save Assignment
-        if (saveAssignmentBtn) {
-          saveAssignmentBtn.addEventListener('click', function() {
-            // Validate form
-            const form = document.getElementById('assignTaskForm');
-            if (form.checkValidity()) {
-              // Process form data (in a real app, this would be sent to the server)
-              alert('Task assigned successfully!');
-
-              // Close modal and reset form
-              const modal = bootstrap.Modal.getInstance(document.getElementById('assignTaskModal'));
-              modal.hide();
-              form.reset();
-            } else {
-              // Trigger HTML5 validation
-              form.reportValidity();
-            }
-          });
-        }
-
         // Update Request
         if (updateRequestBtn) {
           updateRequestBtn.addEventListener('click', function() {
-            // Validate form
             const form = document.getElementById('editRequestForm');
             if (form.checkValidity()) {
-              // Process form data (in a real app, this would be sent to the server)
               alert('Maintenance request updated successfully!');
-
-              // Close modal
               const modal = bootstrap.Modal.getInstance(document.getElementById('editRequestModal'));
               modal.hide();
             } else {
-              // Trigger HTML5 validation
               form.reportValidity();
             }
           });
         }
 
-        // Initialize current date for the date input field
+        // Initialize current date
         document.addEventListener('DOMContentLoaded', function() {
           const today = new Date().toISOString().split('T')[0];
           if (document.getElementById('requestDate')) {
             document.getElementById('requestDate').value = today;
           }
-          // delete
-                                     window.confirmDelete = function (HistoryID) {
-                            if (confirm(`Are you sure you want to delete History ${HistoryID}?`)) {
-                              // مكان حذف فعلي من السيرفر لو محتاجة
-                              console.log(`MaintenanceHistory ${HistoryID} deleted`);
-                            }
-                          };
+
+          // Delete confirmation
+          window.confirmDelete = function (HistoryID) {
+            if (confirm(`Are you sure you want to delete History ${HistoryID}?`)) {
+              console.log(`MaintenanceHistory ${HistoryID} deleted`);
+            }
+          };
         });
 
-        // Search functionality (simple client-side filtering)
+        // Search
         if (searchInput) {
           searchInput.addEventListener('input', function() {
             const query = this.value.toLowerCase();
             const rows = document.querySelectorAll('#allRequestsTable tbody tr');
-
             rows.forEach(row => {
               const text = row.textContent.toLowerCase();
-              if (text.includes(query)) {
-                row.style.display = '';
-              } else {
-                row.style.display = 'none';
-              }
+              row.style.display = text.includes(query) ? '' : 'none';
             });
-            
           });
-           
         }
     </script>
+
 </body>
 </html>

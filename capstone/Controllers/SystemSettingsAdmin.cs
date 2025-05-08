@@ -1,4 +1,5 @@
 ﻿using capstone.data;
+using capstone.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace capstone.Controllers
@@ -34,7 +35,13 @@ namespace capstone.Controllers
             TempData["SuccessMessage"] = "deleted successfully.";
             return RedirectToAction(nameof(SystemSettings));
         }
+        public IActionResult Create(User user)
+        {
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return RedirectToAction("SystemSettings");
+        }
 
-       
+
     }
 }

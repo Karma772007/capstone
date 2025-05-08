@@ -1,4 +1,5 @@
 ﻿using capstone.data;
+using capstone.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace capstone.Controllers
@@ -36,7 +37,12 @@ namespace capstone.Controllers
                 return RedirectToAction(nameof(SparePartsAdminDashboard));
             }
 
-           
+        public IActionResult Create(SparePartInventory spare)
+        {
+            _context.Sparepartinventories.Add(spare);
+            _context.SaveChanges();
+            return RedirectToAction("SparePartsAdminDashboard");
         }
     }
+   }
 
