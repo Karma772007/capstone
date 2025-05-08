@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<capstone.Models.CleaningLog>
+@using System.Collections.Generic
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,8 +9,8 @@
     <title>Maintenance & Machine Reports | Admin Dashboard – SafeCycle</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
-        /* Sidebar Styles */
         :root {
             --primary-color: #4da6ff;
             --primary-dark: #0066cc;
@@ -29,13 +30,25 @@
             --transition-speed: 0.3s;
         }
 
-        /* Layout Structure */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: var(--dark-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
         .layout-wrapper {
             display: flex;
             min-height: 100vh;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--white);
@@ -155,7 +168,6 @@
                 color: var(--white);
             }
 
-        /* Main Content Area */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -166,46 +178,6 @@
             margin-left: var(--sidebar-width-collapsed);
         }
 
-        /* Responsive Styles for Sidebar */
-        @@media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                position: fixed;
-                z-index: 1001;
-            }
-
-                .sidebar.mobile-active {
-                    transform: translateX(0);
-                }
-
-            .main-content {
-                margin-left: 0 !important;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-        }
-
-        :root {
-            --primary-color: #4da6ff;
-            --light-grey: #f8f9fa;
-            --dark-grey: #343a40;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        .breadcrumb-item a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
         .page-header {
             background-color: white;
             border-bottom: 1px solid rgba(0,0,0,0.1);
@@ -213,155 +185,128 @@
         }
 
         .nav-tabs .nav-link {
-            color: var(--dark-grey);
+            color: #495057;
             font-weight: 500;
         }
 
             .nav-tabs .nav-link.active {
-                color: var(--primary-color);
-                border-bottom: 2px solid var(--primary-color);
+                color: #0d6efd;
+                border-bottom: 2px solid #0d6efd;
             }
-
-        .dashboard-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
-
-            .dashboard-card:hover {
-                transform: translateY(-3px);
-            }
-
-        .card-icon {
-            background-color: rgba(77, 166, 255, 0.1);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-        }
-
-        .card-title {
-            color: var(--dark-grey);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .card-value {
-            color: var(--dark-grey);
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .filters-panel {
-            background-color: white;
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
 
         .table-card {
             background-color: white;
             border-radius: 8px;
-            padding: 1rem;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 1rem;
         }
 
         .table th {
             font-weight: 500;
-            color: var(--dark-grey);
-            border-top: none;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .badge-cleaned {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: var(--success-color);
-            padding: 0.4rem 0.7rem;
-        }
-
-        .badge-pending {
-            background-color: rgba(255, 198, 0, 0.1);
-            color: var(--warning-color);
-            padding: 0.4rem 0.7rem;
-        }
-
-        .badge-overdue {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: var(--danger-color);
-            padding: 0.4rem 0.7rem;
+            color: #495057;
         }
 
         .action-icon {
-            color: var(--primary-color);
+            color: #0d6efd;
             cursor: pointer;
             margin-right: 0.5rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-            .btn-primary:hover {
-                background-color: #3d96e8;
-                border-color: #3d96e8;
-            }
-
-        .btn-outline-primary {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-            .btn-outline-primary:hover {
-                background-color: var(--primary-color);
-                border-color: var(--primary-color);
-            }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--light-grey);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
-
-        .modal-header {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .close {
-            color: white;
         }
 
         .form-label {
             font-weight: 500;
         }
 
-        .pagination .page-item.active .page-link {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
         }
 
-        .pagination .page-link {
-            color: var(--primary-color);
+            .btn-primary:hover {
+                background-color: #0b5ed7;
+                border-color: #0b5ed7;
+            }
+
+        .btn-outline-primary {
+            color: #0d6efd;
+            border-color: #0d6efd;
         }
-        /* Custom toggle switch */
-        .form-switch .form-check-input:checked {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
+
+            .btn-outline-primary:hover {
+                background-color: #0d6efd;
+                color: white;
+            }
+
+        .modal-header {
+            background-color: #0d6efd;
+            color: white;
         }
+
+        .btn-close-white {
+            filter: invert(1);
+        }
+
+        .badge-cleaned {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            padding: 0.4rem 0.7rem;
+        }
+
+        .badge-pending {
+            background-color: rgba(255, 198, 0, 0.1);
+            color: #ffc107;
+            padding: 0.4rem 0.7rem;
+        }
+
+        .badge-overdue {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            padding: 0.4rem 0.7rem;
+        }
+
+        .menu-toggle {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            margin-right: 15px;
+            display: none;
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar
+
+        {
+            transform: translateX(-100%);
+            position: fixed;
+            z-index: 1001;
+        }
+
+        .sidebar.mobile-active {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+        }
+
+        .menu-toggle {
+            display: block !important;
+        }
+
+        }
+
+        .validation-message {
+            display: none;
+        }
+
+            .validation-message.show {
+                display: block;
+            }
     </style>
 </head>
 <body>
+    @{
+        var machines = ViewBag.Machines as List<capstone.Models.Machine>;
+    }
     <div class="layout-wrapper">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
@@ -371,37 +316,36 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="./admindashboard.html" class="sidebar-item active">
+                <a asp-action="AdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
-                <a href="./machineManagmentAdmin.html" class="sidebar-item">
+                <a asp-action="MachineManagmentAdmin" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">Machine Management</span>
                     <span class="badge">4</span>
                 </a>
-                <a href="./MaintenanceAdminDshboard.html" class="sidebar-item">
+                <a asp-action="MaintenanceAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance</span>
                     <span class="badge">7</span>
                 </a>
-                <a href="./EmployeesAdminDashboard.html" class="sidebar-item">
+                <a asp-action="EmployeesAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-users"></i>
                     <span class="sidebar-item-text">Workers / Technicians</span>
                 </a>
-                <a href="./SparePartsAdminDashboard.html" class="sidebar-item">
+                <a asp-action="SparePartsAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-boxes"></i>
                     <span class="sidebar-item-text">Spare Parts Inventory</span>
                     <span class="badge">3</span>
                 </a>
                 <div class="sidebar-heading">Records</div>
-                <a href="./CleaningLogsAdminDashboard.html" class="sidebar-item">
+                <a asp-action="CleaningLogsAdminDashboard" asp-controller="CleaningLogs" class="sidebar-item active">
                     <i class="fas fa-clipboard-list"></i>
                     <span class="sidebar-item-text">Cleaning Logs</span>
                 </a>
-
                 <div class="sidebar-heading">System</div>
-                <a href="./SystemSettingsAdminDashboard.html" class="sidebar-item">
+                <a asp-action="SystemSettingsAdminDashboard" asp-controller="Admin" class="sidebar-item">
                     <i class="fas fa-cog"></i>
                     <span class="sidebar-item-text">System Settings</span>
                 </a>
@@ -410,28 +354,65 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
         </aside>
-        <!-- Your main content div -->
+
+        <!-- Main Content -->
         <div class="main-content">
-            <!-- Your page content here -->
-            <!-- Top Navbar -->
-            <!-- Main Content -->
-            <div class="container py-4">
-
-
-                <!-- Tab Content -->
-                <div class="tab-content" id="maintenanceTabContent">
-
-                    <!-- Cleaning Logs Tab -->
-                    <div class="tab-pane fade show active" id="cleaningLogs" role="tabpanel">
-                        <div class="mb-4">
-                            <h3>Cleaning Logs</h3>
+            <!-- Header Section -->
+            <header class="page-header">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h1 class="h4 mb-1">Cleaning Logs</h1>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb small mb-0">
-                                    <li class="breadcrumb-item"><a href="./admindashboard.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a asp-action="AdminDashboard" asp-controller="Admin">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Cleaning Logs</li>
                                 </ol>
                             </nav>
                         </div>
+                        <div class="col-lg-6 text-end">
+                            <div class="menu-toggle" id="menu-toggle">
+                                <i class="fas fa-bars"></i>
+                            </div>
+                            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addCleaningLogModal" @(machines == null || !machines.Any() ? "disabled" : "")>
+                                <i class="fas fa-plus me-1"></i> Add Cleaning Log
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <div class="container py-4">
+                <!-- Success/Error Messages -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs mb-4" id="maintenanceTabContent" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="cleaningLogs-tab" data-bs-toggle="tab" data-bs-target="#cleaningLogs" type="button" role="tabpanel" aria-selected="true">
+                            <i class="fas fa-clipboard-list me-1"></i> Cleaning Logs
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="maintenanceTabContent">
+                    <!-- Cleaning Logs Tab -->
+                    <div class="tab-pane fade show active" id="cleaningLogs" role="tabpanel">
                         <div class="filters-panel mb-4">
                             <div class="row align-items-center">
                                 <div class="col-lg-4 mb-3 mb-lg-0">
@@ -447,17 +428,14 @@
                                         <div class="me-2">
                                             <select class="form-select" id="filterStatus">
                                                 <option value="">Status: All</option>
-                                                <option value="cleaned">Cleaned</option>
-                                                <option value="pending">Pending</option>
-                                                <option value="overdue">Overdue</option>
+                                                <option value="Cleaned">Cleaned</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Overdue">Overdue</option>
                                             </select>
                                         </div>
                                         <div class="me-2">
                                             <input type="date" class="form-control" id="filterDate" placeholder="Select date...">
                                         </div>
-                                        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addCleaningLogModal">
-                                            <i class="fas fa-plus me-1"></i> Add Cleaning Log
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -476,204 +454,621 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var x in Model)
+                                        @if (Model.Any())
+                                        {
+                                            foreach (var x in Model)
+                                            {
+                                                <tr data-log-id="@x.LogID">
+                                                    <td>@x.LogID</td>
+                                                    <td>@(x.Machine != null ? x.Machine.Name : "Unknown Machine")</td>
+                                                    <td>@x.CleaningDate.ToString("MMM dd, yyyy")</td>
+                                                    <td>@x.CleaningMethod</td>
+                                                    <td>
+                                                        <span class="badge @(x.Status == "Cleaned" ? "badge-cleaned" : x.Status == "Pending" ? "badge-pending" : "badge-overdue")">
+                                                            @x.Status
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <i class="action-icon fas fa-edit" title="Edit" onclick="openEditModal(@x.LogID)"></i>
+                                                        <form asp-action="Delete" asp-controller="CleaningLogs" method="post" style="display:inline;">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="id" value="@x.LogID" />
+                                                            <button type="submit" class="action-icon delete-btn" title="Delete" onclick="return confirm('Are you sure you want to delete Log #@x.LogID?');">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
                                         {
                                             <tr>
-                                                <td>
-                                                    @x.LogID
-                                                </td>
-                                                <td>
-                                                    @x.MachineID
-                                                </td>
-                                                <td>
-                                                    @x.CleaningDate
-                                                </td>
-                                                <td>
-                                                    @x.CleaningMethod
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">@x.Status</span>
-
-                                                </td>
-
-                                                <td class="text-end">
-                                                    <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editMachineModal" title="Edit"></i>
-                                                    <form method="post" action="/CleaningLogs/Delete/@x.LogID" style="display:inline;">
-                                                        @Html.AntiForgeryToken()
-                                                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this Log?');">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </form>
-                                                </td>
+                                                <td colspan="6" class="text-center">No cleaning logs found.</td>
                                             </tr>
                                         }
                                     </tbody>
                                 </table>
                             </div>
-
-
                         </div>
                     </div>
+                </div>
+            </div>
 
-
-                    <!-- Add Cleaning Log Modal -->
-                    <div class="modal fade" id="addCleaningLogModal" tabindex="-1" aria-labelledby="addCleaningLogModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title" id="addCleaningLogModalLabel">Add New Cleaning Log</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- Add Cleaning Log Modal -->
+            <div class="modal fade" id="addCleaningLogModal" tabindex="-1" aria-labelledby="addCleaningLogModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="addCleaningLogModalLabel">Add New Cleaning Log</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @if (machines == null || !machines.Any())
+                            {
+                                <div class="alert alert-warning" role="alert">
+                                    No machines available. Please add machines in the Machine Management section first.
                                 </div>
-                                <div class="modal-body">
-                                    <form id="addCleaningLogForm">
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="machineName" class="form-label">Machine Name</label>
-                                                <select class="form-select" id="machineName" required>
-                                                    <option value="">Select Machine</option>
-                                                    <option value="cnc-milling-machine">CNC Milling Machine</option>
-                                                    <option value="laser-cutter">Laser Cutter</option>
-                                                    <option value="injection-molding-machine">Injection Molding Machine</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="cleaningDate" class="form-label">Cleaning Date</label>
-                                                <input type="date" class="form-control" id="cleaningDate" required>
-                                            </div>
+                            }
+                            else
+                            {
+                                <form asp-action="Create" asp-controller="CleaningLogs" method="post" id="addCleaningLogForm">
+                                    @Html.AntiForgeryToken()
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="machineID" class="form-label">Machine</label>
+                                            <select class="form-select" id="machineID" name="MachineID" required>
+                                                <option value="" disabled selected>Select Machine</option>
+                                                @foreach (var machine in machines)
+                                                {
+                                                    <option value="@machine.MachineId">@machine.Name (ID: @machine.MachineId)</option>
+                                                }
+                                            </select>
+                                            <span id="machineID-error" class="text-danger validation-message" data-for="MachineID"></span>
                                         </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="method" class="form-label">Method</label>
-                                                <select class="form-select" id="method" required>
-                                                    <option value="">Select Method</option>
-                                                    <option value="cip">CIP</option>
-                                                    <option value="cop">COP</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="status" class="form-label">Status</label>
-                                                <select class="form-select" id="status" required>
-                                                    <option value="cleaned">Cleaned</option>
-                                                    <option value="pending">Pending</option>
-                                                    <option value="overdue">Overdue</option>
-                                                </select>
-                                            </div>
+                                        <div class="col-md-6">
+                                            <label for="cleaningDate" class="form-label">Cleaning Date</label>
+                                            <input type="date" class="form-control" id="cleaningDate" name="CleaningDate" required>
+                                            <span id="cleaningDate-error" class="text-danger validation-message" data-for="CleaningDate"></span>
                                         </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="technician" class="form-label">Technician</label>
-                                                <select class="form-select" id="technician" required>
-                                                    <option value="">Select Technician</option>
-                                                    <option value="jane-doe">Jane Doe</option>
-                                                    <option value="john-smith">John Smith</option>
-                                                </select>
-                                            </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="cleaningMethod" class="form-label">Method</label>
+                                            <select class="form-select" id="cleaningMethod" name="CleaningMethod" required>
+                                                <option value="" disabled selected>Select Method</option>
+                                                <option value="CIP">CIP</option>
+                                                <option value="COP">COP</option>
+                                            </select>
+                                            <span id="cleaningMethod-error" class="text-danger validation-message" data-for="CleaningMethod"></span>
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary" id="saveCleaningLog">Save Cleaning Log</button>
-                                </div>
-                            </div>
+                                        <div class="col-md-6">
+                                            <label for="status" class="form-label">Status</label>
+                                            <select class="form-select" id="status" name="Status" required>
+                                                <option value="" disabled selected>Select Status</option>
+                                                <option value="Cleaned">Cleaned</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Overdue">Overdue</option>
+                                            </select>
+                                            <span id="status-error" class="text-danger validation-message" data-for="Status"></span>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary" @(machines.Any() ? "" : "disabled")>Save Cleaning Log</button>
+                                    </div>
+                                </form>
+                            }
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Success Toast -->
-                    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="d-flex">
-                                <div class="toast-body">
-                                    <i class="fas fa-check-circle me-2"></i>
-                                    <span id="toastMessage">Operation completed successfully!</span>
+            <!-- Edit Cleaning Log Modal -->
+            <div class="modal fade" id="editCleaningLogModal" tabindex="-1" aria-labelledby="editCleaningLogModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="editCleaningLogModalLabel">Edit Cleaning Log</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @if (machines == null || !machines.Any())
+                            {
+                                <div class="alert alert-warning" role="alert">
+                                    No machines available. Please add machines in the Machine Management section first.
                                 </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
+                            }
+                            else
+                            {
+                                <form asp-action="Update" asp-controller="CleaningLogs" method="post" id="editCleaningLogForm">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="LogID" id="editLogID" />
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="editMachineID" class="form-label">Machine</label>
+                                            <select class="form-select" id="editMachineID" name="MachineID" required>
+                                                <option value="" disabled>Select Machine</option>
+                                                @foreach (var machine in machines)
+                                                {
+                                                    <option value="@machine.MachineId">@machine.Name (ID: @machine.MachineId)</option>
+                                                }
+                                            </select>
+                                            <span id="editMachineID-error" class="text-danger validation-message" data-for="MachineID"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="editCleaningDate" class="form-label">Cleaning Date</label>
+                                            <input type="date" class="form-control" id="editCleaningDate" name="CleaningDate" required>
+                                            <span id="editCleaningDate-error" class="text-danger validation-message" data-for="CleaningDate"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="editCleaningMethod" class="form-label">Method</label>
+                                            <select class="form-select" id="editCleaningMethod" name="CleaningMethod" required>
+                                                <option value="" disabled>Select Method</option>
+                                                <option value="CIP">CIP</option>
+                                                <option value="COP">COP</option>
+                                            </select>
+                                            <span id="editCleaningMethod-error" class="text-danger validation-message" data-for="CleaningMethod"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="editStatus" class="form-label">Status</label>
+                                            <select class="form-select" id="editStatus" name="Status" required>
+                                                <option value="" disabled>Select Status</option>
+                                                <option value="Cleaned">Cleaned</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Overdue">Overdue</option>
+                                            </select>
+                                            <span id="editStatus-error" class="text-danger validation-message" data-for="Status"></span>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            }
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Scripts -->
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-                    <script>
-                            // Wait for the DOM to be fully loaded before running the script
-                        document.addEventListener('DOMContentLoaded', function() {
-                            // Sidebar Toggle Functionality
-                            const sidebarToggle = document.getElementById('sidebar-toggle');
-                            const sidebar = document.getElementById('sidebar');
-                            const menuToggle = document.getElementById('menu-toggle');
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sidebar Toggle Functionality
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
 
-                            if (sidebarToggle) {
-                                sidebarToggle.addEventListener('click', function() {
-                                    sidebar.classList.toggle('collapsed');
-                                });
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('collapsed');
+                });
+            }
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('mobile-active');
+                });
+            }
+
+            // Initialize Bootstrap modals
+            const editModal = new bootstrap.Modal(document.getElementById('editCleaningLogModal'), {});
+
+            // Search and Filter Functionality
+            const searchInput = document.getElementById('searchMachine');
+            const filterStatus = document.getElementById('filterStatus');
+            const filterDate = document.getElementById('filterDate');
+            const tableRows = document.querySelectorAll('#cleaningLogsTable tbody tr');
+
+            function filterTable() {
+                const searchText = searchInput.value.toLowerCase();
+                const statusFilter = filterStatus.value;
+                const dateFilter = filterDate.value;
+
+                tableRows.forEach(row => {
+                    const machineName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                    const status = row.querySelector('td:nth-child(5) .badge').textContent;
+                    const cleaningDate = row.querySelector('td:nth-child(3)').textContent;
+
+                    const matchesSearch = machineName.includes(searchText);
+                    const matchesStatus = !statusFilter || status === statusFilter;
+                    const matchesDate = !dateFilter || new Date(cleaningDate).toISOString().split('T')[0] === dateFilter;
+
+                    row.style.display = matchesSearch && matchesStatus && matchesDate ? '' : 'none';
+                });
+            }
+
+            searchInput.addEventListener('input', filterTable);
+            filterStatus.addEventListener('change', filterTable);
+            filterDate.addEventListener('change', filterTable);
+
+            // Function to clear previous validation messages
+            function clearValidationMessages(formId) {
+                $(`#${formId} .validation-message`).removeClass('show').text('');
+                $(`#${formId} .alert`).remove();
+            }
+
+            // Form Validation for Add Cleaning Log Form
+            $('#addCleaningLogForm').validate({
+                rules: {
+                    MachineID: {
+                        required: true,
+                        number: true,
+                        min: 1
+                    },
+                    CleaningDate: {
+                        required: true,
+                        date: true
+                    },
+                    CleaningMethod: {
+                        required: true
+                    },
+                    Status: {
+                        required: true
+                    }
+                },
+                messages: {
+                    MachineID: {
+                        required: "Please select a machine.",
+                        number: "Machine ID must be a number.",
+                        min: "Please select a valid machine."
+                    },
+                    CleaningDate: {
+                        required: "Please select a cleaning date.",
+                        date: "Please enter a valid date."
+                    },
+                    CleaningMethod: {
+                        required: "Please select a cleaning method."
+                    },
+                    Status: {
+                        required: "Please select a status."
+                    }
+                },
+                errorElement: 'span',
+                errorClass: 'text-danger validation-message',
+                errorPlacement: function (error, element) {
+                    error.addClass('text-danger');
+                    const errorId = element.attr('id') + '-error';
+                    const errorElement = $(`#${errorId}`);
+                    errorElement.text(error.text()).addClass('show');
+                },
+                submitHandler: function (form, event) {
+                    event.preventDefault();
+                    clearValidationMessages('addCleaningLogForm');
+
+                    console.log("=== Starting Add Form Submission ===");
+
+                    // Validate MachineID
+                    const machineID = $('#machineID').val();
+                    console.log("Raw MachineID:", machineID);
+                    const parsedMachineID = parseInt(machineID);
+                    console.log("Parsed MachineID:", parsedMachineID);
+                    if (!machineID || machineID === "" || isNaN(parsedMachineID) || parsedMachineID <= 0) {
+                        $('#machineID-error').text('Please select a valid machine.').addClass('show');
+                        console.log("MachineID validation failed");
+                        return false;
+                    }
+
+                    // Validate CleaningDate
+                    const cleaningDateInput = $('#cleaningDate').val();
+                    console.log("CleaningDate:", cleaningDateInput);
+                    if (!cleaningDateInput) {
+                        $('#cleaningDate-error').text('Please select a cleaning date.').addClass('show');
+                        console.log("CleaningDate validation failed");
+                        return false;
+                    }
+                    const date = new Date(cleaningDateInput);
+                    if (isNaN(date.getTime())) {
+                        $('#cleaningDate-error').text('Please enter a valid date.').addClass('show');
+                        console.log("CleaningDate format validation failed");
+                        return false;
+                    }
+
+                    // Validate CleaningMethod
+                    const cleaningMethod = $('#cleaningMethod').val();
+                    console.log("CleaningMethod:", cleaningMethod);
+                    if (!cleaningMethod || cleaningMethod === "") {
+                        $('#cleaningMethod-error').text('Please select a cleaning method.').addClass('show');
+                        console.log("CleaningMethod validation failed");
+                        return false;
+                    }
+
+                    // Validate Status
+                    const status = $('#status').val();
+                    console.log("Status:", status);
+                    if (!status || status === "") {
+                        $('#status-error').text('Please select a status.').addClass('show');
+                        console.log("Status validation failed");
+                        return false;
+                    }
+
+                    // Construct form data
+                    const formData = new FormData();
+                    formData.append('__RequestVerificationToken', $(form).find('input[name="__RequestVerificationToken"]').val());
+                    formData.append('MachineID', parsedMachineID.toString());
+                    formData.append('CleaningDate', cleaningDateInput);
+                    formData.append('CleaningMethod', cleaningMethod);
+                    formData.append('Status', status);
+
+                    // Log form data
+                    console.log("Add Form Data to Send:");
+                    for (let pair of formData.entries()) {
+                        console.log(pair[0] + ': ' + pair[1]);
+                    }
+
+                    // Submit via AJAX
+                    console.log("Sending AJAX request to /CleaningLogs/Create");
+                    $.ajax({
+                        url: '/CleaningLogs/Create',
+                        type: 'POST',
+                        data: formData,
+                        processData: Ascending: false,
+                        contentType: false,
+                        success: function (response) {
+                            console.log("Success:", response);
+                            $('#addCleaningLogModal').modal('hide');
+                            window.location.href = '/CleaningLogs/CleaningLogsAdminDashboard';
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", xhr.responseText || error);
+                            console.error("Status:", status);
+                            console.error("XHR Status:", xhr.status);
+                            console.error("Response:", xhr.responseJSON || xhr.responseText);
+                            $('#addCleaningLogModal .modal-body').prepend(
+                                '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                                'Error adding cleaning log: ' + (xhr.responseText || 'Unknown error') +
+                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                            );
+                        }
+                    });
+                }
+            });
+
+            // Form Validation for Edit Cleaning Log Form
+            $('#editCleaningLogForm').validate({
+                rules: {
+                    MachineID: {
+                        required: true,
+                        number: true,
+                        min: 1
+                    },
+                    CleaningDate: {
+                        required: true,
+                        date: true
+                    },
+                    CleaningMethod: {
+                        required: true
+                    },
+                    Status: {
+                        required: true
+                    }
+                },
+                messages: {
+                    MachineID: {
+                        required: "Please select a machine.",
+                        number: "Machine ID must be a number.",
+                        min: "Please select a valid machine."
+                    },
+                    CleaningDate: {
+                        required: "Please select a cleaning date.",
+                        date: "Please enter a valid date."
+                    },
+                    CleaningMethod: {
+                        required: "Please select a cleaning method."
+                    },
+                    Status: {
+                        required: "Please select a status."
+                    }
+                },
+                errorElement: 'span',
+                errorClass: 'text-danger validation-message',
+                errorPlacement: function (error, element) {
+                    error.addClass('text-danger');
+                    const errorId = element.attr('id') + '-error';
+                    const errorElement = $(`#${errorId}`);
+                    errorElement.text(error.text()).addClass('show');
+                },
+                submitHandler: function (form, event) {
+                    event.preventDefault();
+                    clearValidationMessages('editCleaningLogForm');
+
+                    console.log("=== Starting Edit Form Submission ===");
+
+                    // Validate LogID
+                    const logID = $('#editLogID').val();
+                    console.log("LogID:", logID);
+                    if (!logID || isNaN(parseInt(logID))) {
+                        $('#editCleaningLogModal .modal-body').prepend(
+                            '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                            'Invalid Log ID.' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                        );
+                        console.log("LogID validation failed");
+                        return false;
+                    }
+
+                    // Validate MachineID
+                    const machineID = $('#editMachineID').val();
+                    console.log("Raw MachineID:", machineID);
+                    const parsedMachineID = parseInt(machineID);
+                    console.log("Parsed MachineID:", parsedMachineID);
+                    if (!machineID || machineID === "" || isNaN(parsedMachineID) || parsedMachineID <= 0) {
+                        $('#editMachineID-error').text('Please select a valid machine.').addClass('show');
+                        console.log("MachineID validation failed");
+                        return false;
+                    }
+
+                    // Validate CleaningDate
+                    const cleaningDateInput = $('#editCleaningDate').val();
+                    console.log("CleaningDate:", cleaningDateInput);
+                    if (!cleaningDateInput) {
+                        $('#editCleaningDate-error').text('Please select a cleaning date.').addClass('show');
+                        console.log("CleaningDate validation failed");
+                        return false;
+                    }
+                    const date = new Date(cleaningDateInput);
+                    if (isNaN(date.getTime())) {
+                        $('#editCleaningDate-error').text('Please enter a valid date.').addClass('show');
+                        console.log("CleaningDate format validation failed");
+                        return false;
+                    }
+
+                    // Validate CleaningMethod
+                    const cleaningMethod = $('#editCleaningMethod').val();
+                    console.log("CleaningMethod:", cleaningMethod);
+                    if (!cleaningMethod || cleaningMethod === "") {
+                        $('#editCleaningMethod-error').text('Please select a cleaning method.').addClass('show');
+                        console.log("CleaningMethod validation failed");
+                        return false;
+                    }
+
+                    // Validate Status
+                    const status = $('#editStatus').val();
+                    console.log("Status:", status);
+                    if (!status || status === "") {
+                        $('#editStatus-error').text('Please select a status.').addClass('show');
+                        console.log("Status validation failed");
+                        return false;
+                    }
+
+                    // Construct form data
+                    const formData = new FormData();
+                    formData.append('__RequestVerificationToken', $(form).find('input[name="__RequestVerificationToken"]').val());
+                    formData.append('LogID', logID);
+                    formData.append('MachineID', parsedMachineID.toString());
+                    formData.append('CleaningDate', cleaningDateInput);
+                    formData.append('CleaningMethod', cleaningMethod);
+                    formData.append('Status', status);
+
+                    // Log form data
+                    console.log("Edit Form Data to Send:");
+                    for (let pair of formData.entries()) {
+                        console.log(pair[0] + ': ' + pair[1]);
+                    }
+
+                    // Submit via AJAX
+                    console.log("Sending AJAX request to /CleaningLogs/Update");
+                    $.ajax({
+                        url: '/CleaningLogs/Update',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            console.log("Success:", response);
+                            $('#editCleaningLogModal').modal('hide');
+                            window.location.href = '/CleaningLogs/CleaningLogsAdminDashboard';
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", xhr.responseText || error);
+                            console.error("Status:", status);
+                            console.error("XHR Status:", xhr.status);
+                            console.error("Response:", xhr.responseJSON || xhr.responseText);
+                            $('#editCleaningLogModal .modal-body').prepend(
+                                '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                                'Error updating cleaning log: ' + (xhr.responseText || 'Unknown error') +
+                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                            );
+                        }
+                    });
+                }
+            });
+
+            // Open Edit Modal and Populate Data
+            window.openEditModal = function (logID) {
+                console.log("=== Opening Edit Modal for LogID:", logID);
+                if (!logID || isNaN(logID)) {
+                    console.error("Invalid LogID:", logID);
+                    alert('Invalid cleaning log ID.');
+                    return;
+                }
+
+                // Clear previous modal content
+                clearValidationMessages('editCleaningLogForm');
+                $('#editCleaningLogForm')[0].reset();
+
+                // Fetch data via AJAX
+                $.ajax({
+                    url: '/CleaningLogs/Edit/' + logID,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("Edit data received:", data);
+                        if (!data) {
+                            console.error("No data returned for LogID:", logID);
+                            alert('No data found for this cleaning log.');
+                            return;
+                        }
+
+                        // Populate form fields
+                        $('#editLogID').val(data.logID);
+                        $('#editMachineID').val(data.machineID);
+
+                        // Format cleaningDate to YYYY-MM-DD
+                        let formattedDate = '';
+                        try {
+                            const cleaningDate = new Date(data.cleaningDate);
+                            if (!isNaN(cleaningDate.getTime())) {
+                                formattedDate = cleaningDate.toISOString().split('T')[0];
+                            } else {
+                                console.warn("Invalid cleaningDate:", data.cleaningDate);
+                                formattedDate = '';
                             }
+                        } catch (e) {
+                            console.error("Error parsing cleaningDate:", e);
+                            formattedDate = '';
+                        }
+                        $('#editCleaningDate').val(formattedDate);
 
-                            // Mobile Menu Toggle
-                            if (menuToggle) {
-                                menuToggle.addEventListener('click', function() {
-                                    sidebar.classList.toggle('mobile-active');
-                                });
-                            }
+                        $('#editCleaningMethod').val(data.cleaningMethod || '');
+                        $('#editStatus').val(data.status || '');
 
-                            // Set active menu item based on current page
-                            const currentPageUrl = window.location.pathname;
-                            const sidebarItems = document.querySelectorAll('.sidebar-item');
+                        // Show the modal
+                        console.log("Showing editCleaningLogModal");
+                        editModal.show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching edit data for LogID:", logID);
+                        console.error("Status:", status);
+                        console.error("XHR Status:", xhr.status);
+                        console.error("Response:", xhr.responseJSON || xhr.responseText);
+                        alert('Error loading cleaning log data: ' + (xhr.responseText || 'Unknown error'));
+                    }
+                });
+            };
 
-                            sidebarItems.forEach(item => {
-                                // Remove active class from all items first
-                                item.classList.remove('active');
+            // Reset forms when modals are opened or closed
+            $('#addCleaningLogModal').on('show.bs.modal', function () {
+                $('#addCleaningLogForm')[0].reset();
+                clearValidationMessages('addCleaningLogForm');
+                console.log("Add Cleaning Log Modal opened, form reset");
+            });
 
-                                // Compare the href with the current page URL
-                                const itemUrl = item.getAttribute('href');
+            $('#addCleaningLogModal').on('hidden.bs.modal', function () {
+                $('#addCleaningLogForm')[0].reset();
+                clearValidationMessages('addCleaningLogForm');
+                console.log("Add Cleaning Log Modal closed, form reset");
+            });
 
-                                // Check if the current page matches this menu item
-                                if (itemUrl === currentPageUrl ||
-                                    (currentPageUrl.endsWith('/index.html') && itemUrl === '#')) {
-                                    item.classList.add('active');
-                                }
-                            });
-                        });
-                            document.addEventListener("DOMContentLoaded", function () {
-                              // Handle select all checkbox
-                              const selectAllCheckbox = document.getElementById('selectAll');
-                              if (selectAllCheckbox) {
-                                selectAllCheckbox.addEventListener('change', function () {
-                                  const checkboxes = document.querySelectorAll('.cleaning-log-checkbox');
-                                  checkboxes.forEach(checkbox => {
-                                    checkbox.checked = this.checked;
-                                  });
-                                });
-                              }
+            $('#editCleaningLogModal').on('show.bs.modal', function () {
+                clearValidationMessages('editCleaningLogForm');
+                console.log("Edit Cleaning Log Modal opened");
+            });
 
-                              // Handle save cleaning log button
-                              const saveCleaningLogBtn = document.getElementById('saveCleaningLog');
-                              if (saveCleaningLogBtn) {
-                                saveCleaningLogBtn.addEventListener('click', function () {
-                                  alert('Cleaning log saved successfully!');
-                                  const modal = bootstrap.Modal.getInstance(document.getElementById('addCleaningLogModal'));
-                                  modal.hide();
-                                });
-                              }
-
-                              // Handle reset filters button
-                              const resetFiltersBtn = document.getElementById('resetFilters');
-                              if (resetFiltersBtn) {
-                                resetFiltersBtn.addEventListener('click', function () {
-                                  document.getElementById('searchMachine').value = '';
-                                  document.getElementById('filterStatus').value = '';
-                                  document.getElementById('filterDate').value = '';
-                                });
-                              }
-                                // delete
-                                     window.confirmDelete = function (LogID) {
-                            if (confirm(`Are you sure you want to delete Log ${LogID}?`)) {
-                              // مكان حذف فعلي من السيرفر لو محتاجة
-                              console.log(`CleaningLog ${LogID} deleted`);
-                            }
-                          };
-                            });
-                          
-                        
-                    </script>
+            $('#editCleaningLogModal').on('hidden.bs.modal', function () {
+                $('#editCleaningLogForm')[0].reset();
+                clearValidationMessages('editCleaningLogForm');
+                console.log("Edit Cleaning Log Modal closed, form reset");
+            });
+        });
+    </script>
 </body>
 </html>
