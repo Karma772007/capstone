@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace capstone.Controllers
 {
-    public class SparePartsAdmin : Controller
-    {
+    
         public class SparePartsAdminController : Controller
         {
             private readonly Projectcontext _context;
@@ -13,10 +12,10 @@ namespace capstone.Controllers
             {
                 _context = context;
             }
-            public ActionResult SparePartsAdminDashboard()
+            public IActionResult SparePartsAdminDashboard()
             {
                 var clean = _context.Sparepartinventories.ToList();
-                return View("SparePartsAdminDashboard");
+                return View(clean);
             }
 
             [HttpPost]
@@ -40,4 +39,4 @@ namespace capstone.Controllers
            
         }
     }
-}
+

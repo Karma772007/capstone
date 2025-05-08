@@ -1,4 +1,7 @@
-﻿
+﻿@{
+    var maintenanceHistories = ViewBag.Maintenancehistories as List<MaintenanceHistory>;
+    var machines = ViewBag.Machines as List<Machine>;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -842,16 +845,16 @@
     <div class="sidebar-menu">
         
         <div class="sidebar-heading">Main</div>
-        <a href="./workerdashboard.html" class="sidebar-item active">
+        <a href="~/Worker/workerdashboard" class="sidebar-item active">
             <i class="fas fa-tachometer-alt"></i>
             <span class="sidebar-item-text">Dashboard</span>
         </a>
-        <a href="./MyTasksWorkerDshboard.html" class="sidebar-item">
+                <a href="~/Worker/MyTasksWorkerDshboard" class="sidebar-item">
             <i class="fas fa-cogs"></i>
             <span class="sidebar-item-text" >My Tasks</span>
             <span class="badge">4</span>
         </a>
-        <a href="./MaintenanceRequestsWorkerDashBoard.html" class="sidebar-item">
+                <a href="~/Worker/MaintenanceRequestsWorkerDashBoard" class="sidebar-item">
             <i class="fas fa-tools"></i>
             <span class="sidebar-item-text">Maintenance Requests</span>
             <span class="badge">7</span>
@@ -860,7 +863,7 @@
         
         
         <div class="sidebar-heading">System</div>
-        <a href="./index.html" class="sidebar-item">
+        <a href="~/Home/Index" class="sidebar-item">
             <i class="fas fa-cog"></i>
             <span class="sidebar-item-text">Logout</span>
         </a>
@@ -954,88 +957,36 @@
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">My Assigned Tasks</h2>
-                <div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                </div>
+               
             </div>
             <table class="task-table">
-                <thead>
-                    <tr>
-                        <th>Task ID</th>
-                        <th>Machine</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Deadline</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>T-1023</td>
-                        <td>Recycler-A12</td>
-                        <td>Replace filter system</td>
-                        <td><span class="task-status status-urgent">Urgent</span></td>
-                        <td>Mar 23, 2025 - 17:00</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">Start</button>
-                                <button class="btn btn-warning">Update</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>T-1022</td>
-                        <td>Compactor-B07</td>
-                        <td>Weekly maintenance checkup</td>
-                        <td><span class="task-status status-in-progress">In Progress</span></td>
-                        <td>Mar 24, 2025 - 12:00</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-warning">Update</button>
-                                <button class="btn btn-success">Complete</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>T-1021</td>
-                        <td>Sorter-C15</td>
-                        <td>Clean conveyor belt</td>
-                        <td><span class="task-status status-pending">Pending</span></td>
-                        <td>Mar 25, 2025 - 09:00</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">Start</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>T-1020</td>
-                        <td>Crusher-D03</td>
-                        <td>Lubricate moving parts</td>
-                        <td><span class="task-status status-completed">Completed</span></td>
-                        <td>Mar 22, 2025 - 16:00</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">Details</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>T-1019</td>
-                        <td>Recycler-A14</td>
-                        <td>Check hydraulic system</td>
-                        <td><span class="task-status status-urgent">Urgent</span></td>
-                        <td>Mar 23, 2025 - 14:30</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">Start</button>
-                                <button class="btn btn-warning">Update</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                    <thead>
+                        <tr>
+                            <th>Machine ID</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Last Maintenance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in machines)
+                        {
+                            <tr>
+                                <td>
+                                    @x.MachineId
+                                </td>
+                                <td>
+                                    @x.Name
+                                </td>
+                                <td>
+                                    @x.Status
+                                </td>
+                                <td>
+                                    @x.LastMaintenanceDate
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
             </table>
         </div>
 
@@ -1072,72 +1023,33 @@
                 <input type="date" class="filter-control">
             </div>
             <table class="task-table">
-                <thead>
-                    <tr>
-                        <th>Request ID</th>
-                        <th>Machine</th>
-                        <th>Issue Type</th>
-                        <th>Description</th>
-                        <th>Date Filed</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>MR-2045</td>
-                        <td>Recycler-A12</td>
-                        <td>Mechanical</td>
-                        <td>Filter system malfunction</td>
-                        <td>Mar 20, 2025</td>
-                        <td><span class="task-status status-in-progress">In Progress</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>MR-2042</td>
-                        <td>Compactor-B07</td>
-                        <td>Electrical</td>
-                        <td>Control panel unresponsive</td>
-                        <td>Mar 18, 2025</td>
-                        <td><span class="task-status status-completed">Completed</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>MR-2039</td>
-                        <td>Sorter-C15</td>
-                        <td>Maintenance</td>
-                        <td>Belt alignment issue</td>
-                        <td>Mar 15, 2025</td>
-                        <td><span class="task-status status-pending">Pending</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">View</button>
-                                <button class="btn btn-warning">Cancel</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>MR-2036</td>
-                        <td>Crusher-D03</td>
-                        <td>Hydraulic</td>
-                        <td>Fluid leak from rear valve</td>
-                        <td>Mar 12, 2025</td>
-                        <td><span class="task-status status-completed">Completed</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-primary">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                            <thead>
+                                <tr>
+                                    <th>History ID</th>
+                                    <th>Machine ID</th>
+                                    <th>Repair Details</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var x in maintenanceHistories)
+                                {
+                                    <tr>
+                                        <td>
+                                            @x.HistoryID
+                                        </td>
+                                        <td>
+                                            @x.MachineID
+                                        </td>
+                                        <td>
+                                            @x.RepairDetails
+                                        </td>
+                                        <td>
+                                            @x.CompletionDate
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
             </table>
         </div>
     </div>

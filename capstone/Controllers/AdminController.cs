@@ -128,5 +128,15 @@ namespace capstone.Controllers
 
             return RedirectToAction(nameof(MachineManagmentAdmin));
         }
+
+        public IActionResult admindashboard()
+        {
+            ViewBag.Maintenancehistories = _context.Maintenancehistories.ToList();
+            ViewBag.Machines = _context.Machines.ToList();
+            return View();
+
+        }
     }
+
+
 }

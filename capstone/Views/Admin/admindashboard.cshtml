@@ -1,4 +1,7 @@
-﻿
+﻿@{
+    var maintenanceHistories = ViewBag.Maintenancehistories as List<MaintenanceHistory>;
+    var machines = ViewBag.Machines as List<Machine>;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -776,37 +779,37 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="./admindashboard.html" class="sidebar-item active">
+                <a href="~/Admin/admindashboard" class="sidebar-item active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
-                <a href="./machineManagmentAdmin.html" class="sidebar-item">
+                <a href="~/Admin/machineManagmentAdmin" class="sidebar-item">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">Machine Management</span>
                     <span class="badge">4</span>
                 </a>
-                <a href="./MaintenanceAdminDshboard.html" class="sidebar-item">
+                <a href="~/MaintenanceAdmin/MaintenanceAdminDshboard" class="sidebar-item">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance</span>
                     <span class="badge">7</span>
                 </a>
-                <a href="./EmployeesAdminDashboard.html" class="sidebar-item">
+                <a href="~/WorkerAdmin/WorkerAdminDashboard" class="sidebar-item">
                     <i class="fas fa-users"></i>
                     <span class="sidebar-item-text">Workers / Technicians</span>
                 </a>
-                <a href="./SparePartsAdminDashboard/SparePartsAdmin" class="sidebar-item">
+                <a href="~/SparePartsAdmin/SparePartsAdminDashboard" class="sidebar-item">
                     <i class="fas fa-boxes"></i>
                     <span class="sidebar-item-text">Spare Parts Inventory</span>
                     <span class="badge">3</span>
                 </a>
                 <div class="sidebar-heading">Records</div>
-                <a href="./CleaningLogsAdminDashboard.html" class="sidebar-item">
+                <a href="~/CleaningLogs/CleaningLogsAdminDashboard" class="sidebar-item">
                     <i class="fas fa-clipboard-list"></i>
                     <span class="sidebar-item-text">Cleaning Logs</span>
                 </a>
 
                 <div class="sidebar-heading">System</div>
-                <a href="./SystemSettingsAdminDashboard.html" class="sidebar-item">
+                <a href="~/SystemSettingsAdmin/SystemSettings" class="sidebar-item">
                     <i class="fas fa-cog"></i>
                     <span class="sidebar-item-text">System Settings</span>
                 </a>
@@ -962,14 +965,7 @@
                     <div class="machine-status">
                         <div class="section-header">
                             <h3 class="section-title">Machine Status</h3>
-                            <div class="section-actions">
-                                <button class="btn btn-outline-primary">
-                                    <i class="fas fa-filter"></i> Filter
-                                </button>
-                                <button class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> Add Machine
-                                </button>
-                            </div>
+                         
                         </div>
                         <div class="table-responsive">
                             <table>
@@ -979,72 +975,26 @@
                                         <th>Name</th>
                                         <th>Status</th>
                                         <th>Last Maintenance</th>
-                                        <th>Next Maintenance</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>M-1024</td>
-                                        <td>Centrifuge A101</td>
-                                        <td><span class="status-badge bg-success">Operational</span></td>
-                                        <td>Mar 15, 2025</td>
-                                        <td>Apr 15, 2025</td>
-                                        <td>
-                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
-                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
-                                            <i class="fas fa-wrench" title="Maintenance"></i>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>M-1025</td>
-                                        <td>Incubator B205</td>
-                                        <td><span class="status-badge bg-warning">Maintenance</span></td>
-                                        <td>Mar 10, 2025</td>
-                                        <td>In Progress</td>
-                                        <td>
-                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
-                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
-                                            <i class="fas fa-wrench" title="Maintenance"></i>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>M-1026</td>
-                                        <td>Autoclave C303</td>
-                                        <td><span class="status-badge bg-danger">Down</span></td>
-                                        <td>Feb 28, 2025</td>
-                                        <td>Immediate</td>
-                                        <td>
-                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
-                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
-                                            <i class="fas fa-wrench" title="Maintenance"></i>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>M-1027</td>
-                                        <td>M-1027</td>
-                                        <td>Mixer D404</td>
-                                        <td><span class="status-badge bg-success">Operational</span></td>
-                                        <td>Mar 23, 2025</td>
-                                        <td>Apr 23, 2025</td>
-                                        <td>
-                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
-                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
-                                            <i class="fas fa-wrench" title="Maintenance"></i>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>M-1028</td>
-                                        <td>Washer E505</td>
-                                        <td><span class="status-badge bg-info">Idle</span></td>
-                                        <td>Mar 20, 2025</td>
-                                        <td>Apr 20, 2025</td>
-                                        <td>
-                                            <i class="fas fa-eye" title="View Details"></i> &nbsp;
-                                            <i class="fas fa-edit" title="Edit"></i> &nbsp;
-                                            <i class="fas fa-wrench" title="Maintenance"></i>
-                                        </td>
-                                    </tr>
+                                    @foreach (var x in machines)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @x.MachineId
+                                            </td>
+                                            <td>
+                                                @x.Name
+                                            </td>
+                                            <td>
+                                                @x.Status
+                                            </td>
+                                            <td>
+                                                @x.LastMaintenanceDate
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -1054,49 +1004,36 @@
                     <div class="maintenance-requests">
                         <div class="section-header">
                             <h3 class="section-title">Maintenance Requests</h3>
-                            <div class="section-actions">
-                                <button class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> New Request
-                                </button>
-                            </div>
+                           
                         </div>
                         <div class="table-responsive">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Request ID</th>
-                                        <th>Machine</th>
-                                        <th>Priority</th>
-                                        <th>Requested By</th>
-                                        <th>Status</th>
-                                        <th>Due Date</th>
+                                        <th>History ID</th>
+                                        <th>Machine ID</th>
+                                        <th>Repair Details</th>
+                                        <th> Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>REQ-2354</td>
-                                        <td>Autoclave C303</td>
-                                        <td><span class="status-badge bg-danger">High</span></td>
-                                        <td>Sarah Johnson</td>
-                                        <td>Assigned</td>
-                                        <td>Apr 07, 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>REQ-2355</td>
-                                        <td>Incubator B205</td>
-                                        <td><span class="status-badge bg-warning">Medium</span></td>
-                                        <td>Mike Chen</td>
-                                        <td>In Progress</td>
-                                        <td>Apr 10, 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>REQ-2356</td>
-                                        <td>Mixer D404</td>
-                                        <td><span class="status-badge bg-info">Low</span></td>
-                                        <td>Lisa Wong</td>
-                                        <td>Scheduled</td>
-                                        <td>Apr 15, 2025</td>
-                                    </tr>
+                                    @foreach (var x in maintenanceHistories)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @x.HistoryID
+                                            </td>
+                                            <td>
+                                                @x.MachineID
+                                            </td>
+                                            <td>
+                                                @x.RepairDetails
+                                            </td>
+                                            <td>
+                                                @x.CompletionDate
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>

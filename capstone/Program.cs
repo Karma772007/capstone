@@ -31,6 +31,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=SparePartsAdmin}/{action=SparePartsAdminDashboard}/{id?}");
+    pattern: "{controller=Worker}/{action=workerdashboard}/{id?}");
 
 app.Run();

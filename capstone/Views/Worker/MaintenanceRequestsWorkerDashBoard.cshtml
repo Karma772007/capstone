@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<capstone.Models.MaintenanceHistory>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -321,16 +323,16 @@
             <div class="sidebar-menu">
 
                 <div class="sidebar-heading">Main</div>
-                <a href="./workerdashboard.html" class="sidebar-item">
+                <a href="~/Worker/workerdashboard" class="sidebar-item active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
-                <a href="./MyTasksWorkerDshboard.html" class="sidebar-item active">
+                <a href="~/Worker/MyTasksWorkerDshboard" class="sidebar-item">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">My Tasks</span>
                     <span class="badge">4</span>
                 </a>
-                <a href="./MaintenanceRequestsWorkerDashBoard.html" class="sidebar-item">
+                <a href="~/Worker/MaintenanceRequestsWorkerDashBoard" class="sidebar-item">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance Requests</span>
                     <span class="badge">7</span>
@@ -339,7 +341,7 @@
 
 
                 <div class="sidebar-heading">System</div>
-                <a href="./index.html" class="sidebar-item">
+                <a href="~/Home/Index" class="sidebar-item">
                     <i class="fas fa-cog"></i>
                     <span class="sidebar-item-text">Logout</span>
                 </a>
@@ -347,8 +349,9 @@
             <div class="sidebar-toggle" id="sidebar-toggle">
                 <i class="fas fa-chevron-left"></i>
             </div>
-
-        </aside>
+            </aside>
+            </div>
+            
         <!-- Your main content div -->
         <div class="main-content">
             <!-- Your page content here -->
@@ -397,36 +400,19 @@
                     <div class="tab-pane fade show active" id="submit-request" role="tabpanel">
                         <div class="card table-card">
                             <div class="card-body">
-                                <form id="requestForm">
+                                <form asp-action="Create" asp-controller="Worker" id="requestForm">
                                     <div class="mb-3">
-                                        <label for="machineName" class="form-label">Machine Name</label>
-                                        <select class="form-select" id="machineName" required>
-                                            <option value="">Select Machine</option>
-                                            <option value="Pill Press A1">Pill Press A1</option>
-                                            <option value="Mixing Tank B2">Mixing Tank B2</option>
-                                            <option value="Packaging Line C3">Packaging Line C3</option>
-                                        </select>
+                                        <label for="MachineID" class="form-label">Machine ID</label>
+                                        <input type="number" class="form-control" id="id" name="MachineID">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="RepairDetails" class="form-label">Repair Details</label>
+                                        <textarea class="form-control" id="RepairDetails" rows="3" name="RepairDetails" placeholder="Describe the issue..." required></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="serialNumber" class="form-label">Serial Number</label>
-                                        <input type="text" class="form-control" id="serialNumber" readonly>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="issueDescription" class="form-label">Issue Description</label>
-                                        <textarea class="form-control" id="issueDescription" rows="3" placeholder="Describe the issue..." required></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="urgencyLevel" class="form-label">Urgency Level</label>
-                                        <select class="form-select" id="urgencyLevel" required>
-                                            <option value="">Select Urgency</option>
-                                            <option value="Low">Low</option>
-                                            <option value="Medium">Medium</option>
-                                            <option value="High">High</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="attachment" class="form-label">Attachment (Optional)</label>
-                                        <input type="file" class="form-control" id="attachment" accept="image/*,.pdf">
+                                        <label for="CompletionDate" class="form-label">Completion Date</label>
+                                        <input type="datetime-local" class="form-control" id="CompletionDate" name="CompletionDate" >
                                     </div>
                                     <button type="submit" class="btn btn-primary">Submit Request</button>
                                 </form>
@@ -465,12 +451,31 @@
                                             <th scope="col">Machine</th>
                                             <th scope="col">Issue Summary</th>
                                             <th scope="col">Submitted Date</th>
-                                            <th scope="col">Status</th>
                                             <th scope="col" class="text-end">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody id="requestList">
-                                        <!-- Requests will be dynamically generated here -->
+                                        @foreach (var x in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @x.HistoryID
+                                                </td>
+                                                <td>
+                                                    @x.MachineID
+                                                </td>
+                                                <td>
+                                                    @x.RepairDetails
+                                                </td>
+                                                <td>
+                                                    @x.CompletionDate
+                                                </td>
+                                                <td class="text-end">
+                                                    <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="REQ-002"><i class="fas fa-pen me-1"></i>Edit</button>
+                                                </td>
+
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -538,99 +543,7 @@
                         }
                     });
                 });
-                    // Mock machines array
-                    const machines = [
-                      { name: "Pill Press A1", serialNumber: "SN12345" },
-                      { name: "Mixing Tank B2", serialNumber: "SN67890" },
-                      { name: "Packaging Line C3", serialNumber: "SN54321" }
-                    ];
-
-                    // Mock requests array
-                    let requests = [];
-
-                    // Auto-fill serial number on machine selection
-                    document.getElementById("machineName").addEventListener("change", (e) => {
-                      const selectedMachine = machines.find(machine => machine.name === e.target.value);
-                      document.getElementById("serialNumber").value = selectedMachine ? selectedMachine.serialNumber : "";
-                    });
-
-                    // Handle form submission
-                    document.getElementById("requestForm").addEventListener("submit", (e) => {
-                      e.preventDefault();
-                      const machineName = document.getElementById("machineName").value;
-                      const serialNumber = document.getElementById("serialNumber").value;
-                      const issueDescription = document.getElementById("issueDescription").value;
-                      const urgencyLevel = document.getElementById("urgencyLevel").value;
-
-                      if (!machineName || !issueDescription || !urgencyLevel) {
-                        alert("Please fill all required fields.");
-                        return;
-                      }
-
-                      const newRequest = {
-                        id: `REQ-${requests.length + 1}`,
-                        machine: machineName,
-                        issue: issueDescription,
-                        date: new Date().toLocaleDateString(),
-                        status: "Pending"
-                      };
-                      requests.push(newRequest);
-
-                      console.log("New request submitted:", newRequest);
-
-                      // Clear form
-                      e.target.reset();
-                      document.getElementById("serialNumber").value = "";
-
-                      // Show success toast
-                      alert("Request submitted successfully!");
-
-                      // Re-render request list
-                      renderRequests(requests);
-                    });
-
-                    // Render requests to the DOM
-                    function renderRequests(filteredRequests) {
-                      const requestList = document.getElementById("requestList");
-                      requestList.innerHTML = "";
-
-                      filteredRequests.forEach(request => {
-                        const row = document.createElement("tr");
-
-                        row.innerHTML = `
-                          <td>${request.id}</td>
-                          <td>${request.machine}</td>
-                          <td>${request.issue.substring(0, 30)}...</td>
-                          <td>${request.date}</td>
-                          <td><span class="badge badge-${request.status.toLowerCase().replace(/ /g, '-')}">${request.status}</span></td>
-                          <td class="text-end">
-                            <i class="action-icon" data-feather="eye" onclick="viewRequestDetails('${request.id}')" title="View Details"></i>
-                          </td>
-                        `;
-
-                        requestList.appendChild(row);
-                      });
-
-                      feather.replace(); // Reinitialize icons after rendering
-                    }
-
-                    // View request details in modal
-                    function viewRequestDetails(requestId) {
-                      const request = requests.find(req => req.id === requestId);
-                      if (request) {
-                        const requestDetails = document.getElementById("requestDetails");
-                        requestDetails.innerHTML = `
-                          <p><strong>Request ID:</strong> ${request.id}</p>
-                          <p><strong>Machine:</strong> ${request.machine}</p>
-                          <p><strong>Issue:</strong> ${request.issue}</p>
-                          <p><strong>Status:</strong> ${request.status}</p>
-                          <p><strong>Submitted Date:</strong> ${request.date}</p>
-                        `;
-                        const viewDetailsModal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
-                        viewDetailsModal.show();
-                      }
-                    }
-
+                   
                     // Search and filter functionality
                     document.querySelector('.filters-panel input').addEventListener("input", (e) => {
                       const query = e.target.value.toLowerCase();
@@ -646,8 +559,6 @@
                       renderRequests(filteredRequests);
                     });
 
-                    // Initial render
-                    renderRequests(requests);
             </script>
 </body>
 </html>

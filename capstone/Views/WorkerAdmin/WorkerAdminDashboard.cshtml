@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<capstone.Models.User>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,26 +168,23 @@
 
         /* Responsive Styles for Sidebar */
         @@media (max-width: 768px) {
-            .sidebar
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1001;
+            }
 
-        {
-            transform: translateX(-100%);
-            position: fixed;
-            z-index: 1001;
-        }
+                .sidebar.mobile-active {
+                    transform: translateX(0);
+                }
 
-        .sidebar.mobile-active {
-            transform: translateX(0);
-        }
+            .main-content {
+                margin-left: 0 !important;
+            }
 
-        .main-content {
-            margin-left: 0 !important;
-        }
-
-        .menu-toggle {
-            display: block;
-        }
-
+            .menu-toggle {
+                display: block;
+            }
         }
 
         :root {
@@ -362,6 +360,7 @@
 <body>
 
     <div class="layout-wrapper">
+        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <i class="fas fa-recycle sidebar-brand-icon"></i>
@@ -369,37 +368,37 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="./admindashboard.html" class="sidebar-item active">
+                <a href="~/Admin/admindashboard" class="sidebar-item active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
-                <a href="./machineManagmentAdmin.html" class="sidebar-item">
+                <a href="~/Admin/machineManagmentAdmin" class="sidebar-item">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">Machine Management</span>
                     <span class="badge">4</span>
                 </a>
-                <a href="./MaintenanceAdminDshboard.html" class="sidebar-item">
+                <a href="~/MaintenanceAdmin/MaintenanceAdminDshboard" class="sidebar-item">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance</span>
                     <span class="badge">7</span>
                 </a>
-                <a href="./EmployeesAdminDashboard.html" class="sidebar-item">
+                <a href="~/WorkerAdmin/WorkerAdminDashboard" class="sidebar-item">
                     <i class="fas fa-users"></i>
                     <span class="sidebar-item-text">Workers / Technicians</span>
                 </a>
-                <a href="./SparePartsAdminDashboard.html" class="sidebar-item">
+                <a href="~/SparePartsAdmin/SparePartsAdminDashboard" class="sidebar-item">
                     <i class="fas fa-boxes"></i>
                     <span class="sidebar-item-text">Spare Parts Inventory</span>
                     <span class="badge">3</span>
                 </a>
                 <div class="sidebar-heading">Records</div>
-                <a href="./CleaningLogsAdminDashboard.html" class="sidebar-item">
+                <a href="~/CleaningLogs/CleaningLogsAdminDashboard" class="sidebar-item">
                     <i class="fas fa-clipboard-list"></i>
                     <span class="sidebar-item-text">Cleaning Logs</span>
                 </a>
 
                 <div class="sidebar-heading">System</div>
-                <a href="./SystemSettingsAdminDashboard.html" class="sidebar-item">
+                <a href="~/SystemSettingsAdmin/SystemSettings" class="sidebar-item">
                     <i class="fas fa-cog"></i>
                     <span class="sidebar-item-text">System Settings</span>
                 </a>
@@ -571,101 +570,39 @@
                                 <table class="table table-hover align-middle" id="allPersonnelTable">
                                     <thead>
                                         <tr>
-                                            <th scope="col" style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                                            <th scope="col">User ID</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Role</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Current Task/Machine</th>
-                                            <th scope="col">Location</th>
-                                            <th scope="col">Experience</th>
+                                            <th scope="col">Phone Number</th>
+                                            <th scope="col">User Name</th>
                                             <th scope="col" class="text-end">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar me-2">JD</div>
-                                                    <div>
-                                                        <div class="fw-bold">John Doe</div>
-                                                        <div class="small text-muted">ID: W001</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Worker</td>
-                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
-                                            <td>Forklift #3</td>
-                                            <td>Site A</td>
-                                            <td>3 years</td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="W001" data-name="John Doe" data-role="Worker"><i class="fas fa-tasks me-1"></i>Assign</button>
-                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="W001"><i class="fas fa-pen me-1"></i>Edit</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar me-2">AS</div>
-                                                    <div>
-                                                        <div class="fw-bold">Anna Smith</div>
-                                                        <div class="small text-muted">ID: T001</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Technician</td>
-                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
-                                            <td>Machine Maintenance #5</td>
-                                            <td>Site B</td>
-                                            <td>5 years</td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="T001" data-name="Anna Smith" data-role="Technician"><i class="fas fa-tasks me-1"></i>Assign</button>
-                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="T001"><i class="fas fa-pen me-1"></i>Edit</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar me-2">RJ</div>
-                                                    <div>
-                                                        <div class="fw-bold">Robert Johnson</div>
-                                                        <div class="small text-muted">ID: W002</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Worker</td>
-                                            <td><span class="badge badge-inactive"><i class="fas fa-circle me-1 small"></i>Inactive</span></td>
-                                            <td>Off Duty</td>
-                                            <td>Warehouse</td>
-                                            <td>2 years</td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="W002" data-name="Robert Johnson" data-role="Worker"><i class="fas fa-tasks me-1"></i>Assign</button>
-                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="W002"><i class="fas fa-pen me-1"></i>Edit</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="checkbox" class="form-check-input personnel-checkbox"></td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar me-2">MP</div>
-                                                    <div>
-                                                        <div class="fw-bold">Maria Parker</div>
-                                                        <div class="small text-muted">ID: T002</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Technician</td>
-                                            <td><span class="badge badge-active"><i class="fas fa-circle me-1 small"></i>Active</span></td>
-                                            <td>System Diagnostics</td>
-                                            <td>Site A</td>
-                                            <td>7 years</td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-primary btn-assign" data-id="T002" data-name="Maria Parker" data-role="Technician"><i class="fas fa-tasks me-1"></i>Assign</button>
-                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="T002"><i class="fas fa-pen me-1"></i>Edit</button>
-                                            </td>
-                                        </tr>
+                                        @foreach (var x in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @x.UserID
+                                                </td>
+                                                <td>
+                                                    @x.FullName
+                                                </td>
+                                                <td>
+                                                    @x.Role
+                                                </td>
+                                                <td>
+                                                    @x.Phone
+                                                </td>
+                                                <td>
+                                                    @x.UserName
+                                                </td>
+                                                <td class="text-end">
+                                                    <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#editMachineModal" title="Edit"></i>
+                                                  
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

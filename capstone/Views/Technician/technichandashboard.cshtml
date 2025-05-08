@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<capstone.Models.Machine>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -809,24 +809,24 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a href="#" class="sidebar-item Active">
+                <a href="~/Technician/technichandashboard" class="sidebar-item Active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
                 <div class="sidebar-heading">Maintenance</div>
 
-                <a href="./MyAssignedMachinesTechnicianDashboard.html" class="sidebar-item">
+                <a href="~/Technician/MyAssignedMachinesTechnicianDashboard" class="sidebar-item">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">My Assigned Machines</span>
                 </a>
 
-                <a href="./UpdateTasksTechnicianDashBoard.html" class="sidebar-item">
+                <a href="~/Technician/UpdateTasksTechnicianDashBoard" class="sidebar-item">
                     <i class="fas fa-list-check"></i>
                     <span class="sidebar-item-text">Update Tasks</span>
                 </a>
                 <div class="sidebar-heading">System</div>
 
-                <a href="./index.html" class="sidebar-item">
+                <a href="~/Home/Index" class="sidebar-item">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span class="sidebar-item-text">Log Out</span>
                 </a>
@@ -1038,64 +1038,29 @@
                             <thead>
                                 <tr>
                                     <th>Machine ID</th>
-                                    <th>Type</th>
-                                    <th>Location</th>
+                                    <th>Name</th>
                                     <th>Status</th>
                                     <th>Last Maintenance</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Recycler-A12</td>
-                                    <td>Sorting Machine</td>
-                                    <td>Building C, Section 2</td>
-                                    <td><span class="status-indicator status-maintenance"></span> Maintenance</td>
-                                    <td>Mar 15, 2025</td>
-                                    <td>
-                                        <button class="btn btn-outline">View Details</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Compactor-B07</td>
-                                    <td>Compacting Unit</td>
-                                    <td>Building A, Section 5</td>
-                                    <td><span class="status-indicator status-active"></span> Active</td>
-                                    <td>Mar 10, 2025</td>
-                                    <td>
-                                        <button class="btn btn-outline">View Details</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Filter-C15</td>
-                                    <td>Air Filtration</td>
-                                    <td>Building B, Section 1</td>
-                                    <td><span class="status-indicator status-active"></span> Active</td>
-                                    <td>Mar 18, 2025</td>
-                                    <td>
-                                        <button class="btn btn-outline">View Details</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Crusher-D03</td>
-                                    <td>Processing Unit</td>
-                                    <td>Building D, Section 3</td>
-                                    <td><span class="status-indicator status-offline"></span> Offline</td>
-                                    <td>Mar 5, 2025</td>
-                                    <td>
-                                        <button class="btn btn-outline">View Details</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Washer-E09</td>
-                                    <td>Cleaning Unit</td>
-                                    <td>Building A, Section 2</td>
-                                    <td><span class="status-indicator status-active"></span> Active</td>
-                                    <td>Mar 12, 2025</td>
-                                    <td>
-                                        <button class="btn btn-outline">View Details</button>
-                                    </td>
-                                </tr>
+                                @foreach (var x in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @x.MachineId
+                                        </td>
+                                        <td>
+                                            @x.Name
+                                        </td>
+                                        <td>
+                                            @x.Status
+                                        </td>
+                                        <td>
+                                            @x.LastMaintenanceDate
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>

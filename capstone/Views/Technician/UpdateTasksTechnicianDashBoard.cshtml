@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<capstone.Models.MaintenanceHistory>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -441,24 +442,24 @@
                 </div>
                 <div class="sidebar-menu">
                     <div class="sidebar-heading">Main</div>
-                    <a href="./technichandashboard.html" class="sidebar-item Active">
+                    <a href="~/Technician/technichandashboard" class="sidebar-item Active">
                         <i class="fas fa-tachometer-alt"></i>
                         <span class="sidebar-item-text">Dashboard</span>
                     </a>
                     <div class="sidebar-heading">Maintenance</div>
 
-                    <a href="./MyAssignedMachinesTechnicianDashboard.html" class="sidebar-item">
+                    <a href="~/Technician/MyAssignedMachinesTechnicianDashboard" class="sidebar-item">
                         <i class="fas fa-cogs"></i>
                         <span class="sidebar-item-text">My Assigned Machines</span>
                     </a>
 
-                    <a href="#" class="sidebar-item">
+                    <a href="~/Technician/UpdateTasksTechnicianDashBoard" class="sidebar-item">
                         <i class="fas fa-list-check"></i>
                         <span class="sidebar-item-text">Update Tasks</span>
                     </a>
                     <div class="sidebar-heading">System</div>
 
-                    <a href="./index.html" class="sidebar-item">
+                    <a href="~/Home/Index" class="sidebar-item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span class="sidebar-item-text">Log Out</span>
                     </a>
@@ -516,20 +517,38 @@
                     </div>
                     <div class="table-card">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle">
+                            <table class="table table-hover align-middle">                    
                                 <thead>
                                     <tr>
-                                        <th scope="col">Task ID</th>
-                                        <th scope="col">Machine Name</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Priority</th>
-                                        <th scope="col">Assigned Date</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">History ID</th>
+                                        <th scope="col">Machine ID</th>
+                                        <th scope="col">Repair Details</th>
+                                        <th scope="col">Submitted Date</th>
                                         <th scope="col" class="text-end">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="taskList">
-                                    <!-- Task rows will be dynamically generated here -->
+                                <tbody id="requestList">
+                                    @foreach (var x in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @x.HistoryID
+                                            </td>
+                                            <td>
+                                                @x.MachineID
+                                            </td>
+                                            <td>
+                                                @x.RepairDetails
+                                            </td>
+                                            <td>
+                                                @x.CompletionDate
+                                            </td>
+                                            <td class="text-end">
+                                                <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="REQ-002"><i class="fas fa-pen me-1"></i>Edit</button>
+                                            </td>
+
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -616,41 +635,9 @@
                     }
                 });
             });
-                // Mock tasks array
-                const tasks = [
-                  { id: 1, machine: "Pill Press A1", description: "Check pressure levels", priority: "High", date: "2023-10-01", status: "In Progress" },
-                  { id: 2, machine: "Mixing Tank B2", description: "Replace worn-out blades", priority: "Medium", date: "2023-10-02", status: "Waiting for Parts" },
-                  { id: 3, machine: "Packaging Line C3", description: "Inspect conveyor belt", priority: "Low", date: "2023-10-03", status: "Completed" }
-                ];
+               
 
-                // Render tasks to the DOM
-                function renderTasks(filteredTasks) {
-                  const taskList = document.getElementById("taskList");
-                  taskList.innerHTML = "";
-
-                  filteredTasks.forEach(task => {
-                    const row = document.createElement("tr");
-
-                    row.innerHTML = `
-                      <td>${task.id}</td>
-                      <td>${task.machine}</td>
-                      <td>${task.description}</td>
-                      <td>${task.priority}</td>
-                      <td>${task.date}</td>
-                      <td><span class="badge ${task.status.toLowerCase().replace(/ /g, '-')}">${task.status}</span></td>
-                      <td class="text-end">
-                        <i class="action-icon" data-feather="edit" data-bs-toggle="modal" data-bs-target="#updateTaskModal" title="Edit"></i>
-                        <i class="action-icon" data-feather="trash-2" onclick="confirmDelete(${task.id})" title="Delete"></i>
-                      </td>
-                    `;
-
-                    taskList.appendChild(row);
-                  });
-                }
-
-                // Initial render
-                renderTasks(tasks);
-
+          
                 // Search and filter functionality
                 document.querySelector('.filters-panel input').addEventListener("input", (e) => {
                   const query = e.target.value.toLowerCase();

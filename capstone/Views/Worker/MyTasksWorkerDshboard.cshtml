@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<capstone.Models.WorkOrder>
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -321,16 +324,16 @@
             <div class="sidebar-menu">
 
                 <div class="sidebar-heading">Main</div>
-                <a href="./workerdashboard.html" class="sidebar-item">
+                <a href="~/Worker/workerdashboard" class="sidebar-item active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
-                <a href="./MyTasksWorkerDshboard.html" class="sidebar-item active">
+                <a href="~/Worker/MyTasksWorkerDshboard" class="sidebar-item">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">My Tasks</span>
                     <span class="badge">4</span>
                 </a>
-                <a href="./MaintenanceRequestsWorkerDashBoard.html" class="sidebar-item">
+                <a href="~/Worker/MaintenanceRequestsWorkerDashBoard" class="sidebar-item">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance Requests</span>
                     <span class="badge">7</span>
@@ -339,7 +342,7 @@
 
 
                 <div class="sidebar-heading">System</div>
-                <a href="./index.html" class="sidebar-item">
+                <a href="~/Home/Index" class="sidebar-item">
                     <i class="fas fa-cog"></i>
                     <span class="sidebar-item-text">Logout</span>
                 </a>
@@ -347,8 +350,8 @@
             <div class="sidebar-toggle" id="sidebar-toggle">
                 <i class="fas fa-chevron-left"></i>
             </div>
-
         </aside>
+    </div>
         <!-- Your main content div -->
         <div class="main-content">
             <!-- Your page content here -->
@@ -406,14 +409,39 @@
                                     <th scope="col">Task ID</th>
                                     <th scope="col">Machine Name</th>
                                     <th scope="col">Task Title</th>
-                                    <th scope="col">Status</th>
                                     <th scope="col">Priority</th>
                                     <th scope="col">Request Date</th>
+                                    <th scope="col">Complete Date</th>
                                     <th scope="col" class="text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="taskList">
-                                <!-- Task rows will be dynamically generated here -->
+                                @foreach (var x in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @x.WorkOrderID
+                                        </td>
+                                        <td>
+                                            @x.MachineID
+                                        </td>
+                                        <td>
+                                            @x.TaskDetails
+                                        </td>
+                                        <td>
+                                            @x.Priority
+                                        </td>
+                                        <td>
+                                            @x.StartDate
+                                        </td>
+                                        <td>
+                                            @x.CompletionDate
+                                        </td>
+                                        <td>
+                                            <i class="action-icon" data-feather="check-circle" data-bs-toggle="modal" data-bs-target="#completionModal" title="Update Status"></i>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -511,72 +539,7 @@
                         }
                     });
                 });
-                    // Mock tasks array
-                    const tasks = [
-                      { id: 1, machine: "Pill Press A1", title: "Inspect tablet weight", status: "Pending", priority: "High", date: "2023-10-01" },
-                      { id: 2, machine: "Mixing Tank B2", title: "Replace worn-out blades", status: "In Progress", priority: "Medium", date: "2023-10-02" },
-                      { id: 3, machine: "Packaging Line C3", title: "Inspect conveyor belt", status: "Completed", priority: "Low", date: "2023-10-03" }
-                    ];
-
-                    // Render tasks to the DOM
-                    function renderTasks(filteredTasks) {
-                      const taskList = document.getElementById("taskList");
-                      taskList.innerHTML = "";
-
-                      filteredTasks.forEach(task => {
-                        const row = document.createElement("tr");
-
-                        row.innerHTML = `
-                          <td>${task.id}</td>
-                          <td>${task.machine}</td>
-                          <td>${task.title}</td>
-                          <td><span class="badge badge-${task.status.toLowerCase().replace(/ /g, '-')}" onclick="toggleStatus(${task.id})">${task.status}</span></td>
-                          <td>${task.priority}</td>
-                          <td>${task.date}</td>
-                          <td class="text-end">
-                            <i class="action-icon" data-feather="eye" onclick="viewDetails(${task.id})" title="View Details"></i>
-                            <i class="action-icon" data-feather="check-circle" data-bs-toggle="modal" data-bs-target="#completionModal" title="Update Status"></i>
-                          </td>
-                        `;
-
-                        taskList.appendChild(row);
-                      });
-
-                      feather.replace(); // Reinitialize icons after rendering
-                    }
-
-                    // Initial render
-                    renderTasks(tasks);
-
-                    // Toggle status directly on badge click
-                    function toggleStatus(taskId) {
-                      const task = tasks.find(task => task.id === taskId);
-                      if (task) {
-                        const statuses = ["Pending", "In Progress", "Completed"];
-                        const currentIndex = statuses.indexOf(task.status);
-                        task.status = statuses[(currentIndex + 1) % statuses.length];
-                        console.log(`Task ID ${taskId} status updated to ${task.status}`);
-                        renderTasks(tasks);
-                      }
-                    }
-
-                    // View task details in modal
-                    function viewDetails(taskId) {
-                      const task = tasks.find(task => task.id === taskId);
-                      if (task) {
-                        const taskDetails = document.getElementById("taskDetails");
-                        taskDetails.innerHTML = `
-                          <p><strong>Task ID:</strong> ${task.id}</p>
-                          <p><strong>Machine Name:</strong> ${task.machine}</p>
-                          <p><strong>Task Title:</strong> ${task.title}</p>
-                          <p><strong>Status:</strong> ${task.status}</p>
-                          <p><strong>Priority:</strong> ${task.priority}</p>
-                          <p><strong>Request Date:</strong> ${task.date}</p>
-                        `;
-                        const viewDetailsModal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
-                        viewDetailsModal.show();
-                      }
-                    }
+                  
 
                     // Update task status via modal
                     let currentTaskId = null;

@@ -272,26 +272,23 @@
         }
 
         @@media (max-width: 768px) {
-            .sidebar
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1001;
+            }
 
-        {
-            transform: translateX(-100%);
-            position: fixed;
-            z-index: 1001;
-        }
+                .sidebar.mobile-active {
+                    transform: translateX(0);
+                }
 
-        .sidebar.mobile-active {
-            transform: translateX(0);
-        }
+            .main-content {
+                margin-left: 0 !important;
+            }
 
-        .main-content {
-            margin-left: 0 !important;
-        }
-
-        .menu-toggle {
-            display: block !important;
-        }
-
+            .menu-toggle {
+                display: block !important;
+            }
         }
 
         .validation-message {
@@ -316,36 +313,37 @@
             </div>
             <div class="sidebar-menu">
                 <div class="sidebar-heading">Main</div>
-                <a asp-action="AdminDashboard" asp-controller="Admin" class="sidebar-item">
+                <a href="~/Admin/admindashboard" class="sidebar-item active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span class="sidebar-item-text">Dashboard</span>
                 </a>
-                <a asp-action="MachineManagmentAdmin" asp-controller="Admin" class="sidebar-item">
+                <a href="~/Admin/machineManagmentAdmin" class="sidebar-item">
                     <i class="fas fa-cogs"></i>
                     <span class="sidebar-item-text">Machine Management</span>
                     <span class="badge">4</span>
                 </a>
-                <a asp-action="MaintenanceAdminDashboard" asp-controller="Admin" class="sidebar-item">
+                <a href="~/MaintenanceAdmin/MaintenanceAdminDshboard" class="sidebar-item">
                     <i class="fas fa-tools"></i>
                     <span class="sidebar-item-text">Maintenance</span>
                     <span class="badge">7</span>
                 </a>
-                <a asp-action="EmployeesAdminDashboard" asp-controller="Admin" class="sidebar-item">
+                <a href="~/WorkerAdmin/WorkerAdminDashboard" class="sidebar-item">
                     <i class="fas fa-users"></i>
                     <span class="sidebar-item-text">Workers / Technicians</span>
                 </a>
-                <a asp-action="SparePartsAdminDashboard" asp-controller="Admin" class="sidebar-item">
+                <a href="~/SparePartsAdmin/SparePartsAdminDashboard" class="sidebar-item">
                     <i class="fas fa-boxes"></i>
                     <span class="sidebar-item-text">Spare Parts Inventory</span>
                     <span class="badge">3</span>
                 </a>
                 <div class="sidebar-heading">Records</div>
-                <a asp-action="CleaningLogsAdminDashboard" asp-controller="CleaningLogs" class="sidebar-item active">
+                <a href="~/CleaningLogs/CleaningLogsAdminDashboard" class="sidebar-item">
                     <i class="fas fa-clipboard-list"></i>
                     <span class="sidebar-item-text">Cleaning Logs</span>
                 </a>
+
                 <div class="sidebar-heading">System</div>
-                <a asp-action="SystemSettingsAdminDashboard" asp-controller="Admin" class="sidebar-item">
+                <a href="~/SystemSettingsAdmin/SystemSettings" class="sidebar-item">
                     <i class="fas fa-cog"></i>
                     <span class="sidebar-item-text">System Settings</span>
                 </a>
@@ -354,7 +352,6 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
         </aside>
-
         <!-- Main Content -->
         <div class="main-content">
             <!-- Header Section -->
