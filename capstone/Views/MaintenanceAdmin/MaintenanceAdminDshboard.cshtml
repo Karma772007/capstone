@@ -402,7 +402,6 @@
                     <i class="fas fa-clipboard-list"></i>
                     <span class="sidebar-item-text">Cleaning Logs</span>
                 </a>
-
                 <div class="sidebar-heading">System</div>
                 <a href="~/SystemSettingsAdmin/SystemSettings" class="sidebar-item">
                     <i class="fas fa-cog"></i>
@@ -438,7 +437,6 @@
                             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addMaintenanceModal">
                                 <i class="fas fa-plus me-1"></i> Add Maintenance Request
                             </button>
-                            
                         </div>
                     </div>
                 </div>
@@ -591,37 +589,26 @@
                                         @foreach (var x in Model)
                                         {
                                             <tr>
-                                                <td>
-                                                    @x.HistoryID
-                                                </td>
-                                                <td>
-                                                    @x.MachineID
-                                                </td>
-                                                <td>
-                                                    @x.RepairDetails
-                                                </td>
-                                                <td>
-                                                    @x.CompletionDate
-                                                </td>
+                                                <td>@x.HistoryID</td>
+                                                <td>@x.MachineID</td>
+                                                <td>@x.RepairDetails</td>
+                                                <td>@x.CompletionDate</td>
                                                 <td class="text-end">
                                                     <button type="button" class="btn btn-sm btn-primary" onclick="openEditModal(@x.HistoryID)">Edit</button>
                                                 </td>
-                                               
                                             </tr>
                                         }
                                     </tbody>
                                 </table>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div class="small text-muted">Showing 2 of 12 entries</div>
+                                <div class="small text-muted">Showing @Model.Count() of @Model.Count() entries</div>
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination pagination-sm mb-0">
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
                                         </li>
                                         <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
                                         <li class="page-item">
                                             <a class="page-link" href="#">Next</a>
                                         </li>
@@ -756,24 +743,22 @@
                                 <input type="number" class="form-control" name="MachineID" id="MachineID" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="RepairDetails" class="form-label">RepairDetails</label>
+                                <label for="RepairDetails" class="form-label">Repair Details</label>
                                 <input type="text" class="form-control" name="RepairDetails" id="RepairDetails" required>
                             </div>
                         </div>
-                       
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="CompletionDate" class="form-label">Date</label>
                                 <input type="datetime-local" name="CompletionDate" class="form-control" id="CompletionDate" required>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary" id="saveRequest">Save Request</button>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="saveRequest">Save Request</button>
                         </div>
                     </form>
                 </div>
-               
             </div>
         </div>
     </div>
@@ -836,15 +821,14 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-action="Update" asp-controller="MaintenanceAdmin" method="post" id="editRequestForm">
+                    <form id="editRequestForm">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="HistoryID" id="editHistoryID" />
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="editMachineID" class="form-label">Machine ID</label>
-                                <input type="text" class="form-control" name="MachineID" id="editRequestId" readonly>
+                                <input type="number" class="form-control" name="MachineID" id="editMachineID" required min="1">
                                 <span class="text-danger validation-message" data-for="MachineID"></span>
-
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -859,16 +843,14 @@
                                 <label for="editCompletionDate" class="form-label">Date</label>
                                 <input type="datetime-local" name="CompletionDate" class="form-control" id="editCompletionDate" required>
                                 <span class="text-danger validation-message" data-for="CompletionDate"></span>
-
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary" id="updateRequest">Update Request</button>
+                            <button type="button" class="btn btn-primary" id="updateRequest">Update Request</button>
                         </div>
                     </form>
                 </div>
-               
             </div>
         </div>
     </div>
@@ -958,7 +940,7 @@
         const menuToggle = document.getElementById('menu-toggle');
         const assignButtons = document.querySelectorAll('.btn-assign');
         const editButtons = document.querySelectorAll('.btn-edit');
-        const selectAllCheckbox = document.getElementById('selectAll');
+        const selectAllCheckbox = document.getElementById('selectAllPending');
         const requestCheckboxes = document.querySelectorAll('.request-checkbox');
         const searchInput = document.getElementById('searchRequests');
         const resetFiltersBtn = document.getElementById('resetFilters');
@@ -968,149 +950,177 @@
 
         // Sidebar Toggle
         sidebarToggle.addEventListener('click', function() {
-          sidebar.classList.toggle('collapsed');
-
-          const icon = this.querySelector('i');
-          if (sidebar.classList.contains('collapsed')) {
-            icon.classList.remove('fa-chevron-left');
-            icon.classList.add('fa-chevron-right');
-          } else {
-            icon.classList.remove('fa-chevron-right');
-            icon.classList.add('fa-chevron-left');
-          }
+            sidebar.classList.toggle('collapsed');
+            const icon = this.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
         });
 
         // Mobile Menu Toggle
         menuToggle.addEventListener('click', function() {
-          sidebar.classList.toggle('mobile-active');
+            sidebar.classList.toggle('mobile-active');
         });
 
         // Select All Checkboxes
         if (selectAllCheckbox) {
-          selectAllCheckbox.addEventListener('change', function() {
-            requestCheckboxes.forEach(checkbox => {
-              checkbox.checked = this.checked;
+            selectAllCheckbox.addEventListener('change', function() {
+                requestCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
             });
-          });
         }
+
+        // Client-side validation for edit form
+        function validateEditForm() {
+            const machineID = document.getElementById('editMachineID').value;
+            const repairDetails = document.getElementById('editRepairDetails').value;
+            const completionDate = document.getElementById('editCompletionDate').value;
+
+            let isValid = true;
+            document.querySelectorAll('.validation-message').forEach(el => el.textContent = '');
+
+            if (!machineID || machineID <= 0) {
+                document.querySelector('[data-for="MachineID"]').textContent = 'معرف الماكينة مطلوب ويجب أن يكون رقمًا صحيحًا موجبًا.';
+                isValid = false;
+            }
+            if (!repairDetails.trim()) {
+                document.querySelector('[data-for="RepairDetails"]').textContent = 'تفاصيل الإصلاح مطلوبة.';
+                isValid = false;
+            }
+            if (!completionDate) {
+                document.querySelector('[data-for="CompletionDate"]').textContent = 'تاريخ الإكمال مطلوب.';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
         // Function to open edit modal and populate data
-        function openEditModal(HistoryID) {
-            fetch(`/MaintenanceAdmin/Edit/${HistoryID}`)
+        function openEditModal(historyID) {
+            fetch(`/MaintenanceAdmin/Edit/${historyID}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
+                    if (!data.success) {
+                        throw new Error(data.message || 'فشل جلب بيانات الصيانة');
+                    }
                     // Format the date for datetime-local input
-                    const formattedDate = new Date(data.completionDate).toISOString().slice(0, 16);
-
+                    const completionDate = data.completionDate ? data.completionDate : '';
                     // Populate form fields
                     document.getElementById('editHistoryID').value = data.historyID;
                     document.getElementById('editMachineID').value = data.machineID;
                     document.getElementById('editRepairDetails').value = data.repairDetails;
-                    document.getElementById('editCompletionDate').value = formattedDate;
-
+                    document.getElementById('editCompletionDate').value = completionDate;
+                    // Clear previous validation messages
+                    document.querySelectorAll('.validation-message').forEach(el => el.textContent = '');
                     // Show the modal
                     const editModal = new bootstrap.Modal(document.getElementById('editRequestModal'));
                     editModal.show();
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error loading maintenance data.');
+                    console.error('Error fetching maintenance data:', error);
+                    alert('خطأ في تحميل بيانات الصيانة: ' + error.message);
                 });
         }
 
         // Handle form submission for update
-        document.getElementById('updateRequest').addEventListener('click', function() {
-            const formData = {
-                HistoryID: document.getElementById('editHistoryID').value,
-                MachineID: document.getElementById('editMachineID').value,
-                RepairDetails: document.getElementById('editRepairDetails').value,
-                CompletionDate: document.getElementById('editCompletionDate').value
-            };
+        if (updateRequestBtn) {
+            updateRequestBtn.addEventListener('click', function() {
+                const form = document.getElementById('editRequestForm');
 
-            fetch('/MaintenanceAdmin/Update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => {
-                if (response.ok) {
+                // Validate form client-side
+                if (!validateEditForm()) {
+                    return;
+                }
+
+                const formData = new FormData(form);
+                // Log FormData for debugging
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+
+                fetch('/MaintenanceAdmin/Update', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+                        });
+                    }
                     return response.json();
-                }
-                throw new Error('Network response was not ok');
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('تم تحديث طلب الصيانة بنجاح');
-                    location.reload();
-                } else {
-                    alert('خطأ: ' + (data.message || 'فشل تحديث طلب الصيانة'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('حدث خطأ أثناء تحديث طلب الصيانة');
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('Maintenance request updated successfully!');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editRequestModal'));
+                        modal.hide();
+                        location.reload();
+                    } else {
+                        alert('خطأ: ' + (data.message || 'فشل تحديث طلب الصيانة'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating maintenance request:', error);
+                    alert('حدث خطأ أثناء تحديث طلب الصيانة: ' + error.message);
+                });
             });
-        });
-
+        }
 
         // Reset Filters
         if (resetFiltersBtn) {
-          resetFiltersBtn.addEventListener('click', function() {
-            document.getElementById('filterMachine').value = '';
-            document.getElementById('filterStatus').value = '';
-            document.getElementById('filterLocation').value = '';
-            searchInput.value = '';
-          });
-        }
-
-        // Update Request
-        if (updateRequestBtn) {
-          updateRequestBtn.addEventListener('click', function() {
-            const form = document.getElementById('editRequestForm');
-            if (form.checkValidity()) {
-              alert('Maintenance request updated successfully!');
-              const modal = bootstrap.Modal.getInstance(document.getElementById('editRequestModal'));
-              modal.hide();
-            } else {
-              form.reportValidity();
-            }
-          });
+            resetFiltersBtn.addEventListener('click', function() {
+                document.getElementById('filterMachine').value = '';
+                document.getElementById('filterStatus').value = '';
+                document.getElementById('filterLocation').value = '';
+                searchInput.value = '';
+            });
         }
 
         // Initialize current date
         document.addEventListener('DOMContentLoaded', function() {
-          const today = new Date().toISOString().split('T')[0];
-          if (document.getElementById('requestDate')) {
-            document.getElementById('requestDate').value = today;
-          }
-
-          // Delete confirmation
-          window.confirmDelete = function (HistoryID) {
-            if (confirm(`Are you sure you want to delete History ${HistoryID}?`)) {
-              console.log(`MaintenanceHistory ${HistoryID} deleted`);
+            const today = new Date().toISOString().slice(0, 10);
+            if (document.getElementById('requestDate')) {
+                document.getElementById('requestDate').value = today;
             }
-          };
+
+            // Delete confirmation
+            window.confirmDelete = function(historyID) {
+                if (confirm(`Are you sure you want to delete History ${historyID}?`)) {
+                    console.log(`MaintenanceHistory ${historyID} deleted`);
+                }
+            };
         });
 
         // Search
         if (searchInput) {
-          searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#allRequestsTable tbody tr');
-            rows.forEach(row => {
-              const text = row.textContent.toLowerCase();
-              row.style.display = text.includes(query) ? '' : 'none';
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#allRequestsTable tbody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(query) ? '' : 'none';
+                });
             });
-          });
         }
     </script>
-
 </body>
 </html>

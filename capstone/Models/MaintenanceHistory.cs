@@ -6,9 +6,14 @@ namespace capstone.Models
     {
         [Key]
         public int HistoryID { get; set; }
+
+        [Required(ErrorMessage = "Machine ID required")]
         public int MachineID { get; set; }
-        public Machine Machine { get; set; }
+
+        [Required(ErrorMessage = "Repair details required")]
         public string RepairDetails { get; set; }
-        public DateTime CompletionDate { get; set; }
+
+        [Required(ErrorMessage = "Completion date required")]
+        public DateTime? CompletionDate { get; set; }
     }
 }

@@ -2,89 +2,107 @@
 using capstone.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace capstone.Controllers
 {
-    public class MaintenanceAdmin : Controller
+    public class MaintenanceAdminController : Controller
     {
         private readonly Projectcontext _context;
 
-        public MaintenanceAdmin(Projectcontext context)
+        public MaintenanceAdminController(Projectcontext context)
         {
             _context = context;
         }
 
         public IActionResult MaintenanceAdminDshboard()
         {
-            var clean = _context.Maintenancehistories.ToList();
-            return View(clean);
-        }
-        public IActionResult Create(MaintenanceHistory maintenanceHistory)
-        {
-            _context.Maintenancehistories.Add(maintenanceHistory);
-            _context.SaveChanges();
-            return RedirectToAction("MaintenanceAdminDshboard");
+            var maintenanceHistories = _context.Maintenancehistories.ToList();
+            return View(maintenanceHistories);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(MaintenanceHistory maintenanceHistory)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Maintenancehistories.Add(maintenanceHistory);
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "Maintenance request created successfully.";
+                    return RedirectToAction(nameof(MaintenanceAdminDshboard));
+                }
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                TempData["ErrorMessage"] = string.Join("; ", errors);
+                return RedirectToAction(nameof(MaintenanceAdminDshboard));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error creating maintenance request: {ex.Message}";
+                return RedirectToAction(nameof(MaintenanceAdminDshboard));
+            }
+        }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var maintenance = await _context.Maintenancehistories.FindAsync(id);
-            if (maintenance == null)
-            {
-                return NotFound();
-            }
-
-            return Json(new
-            {
-                historyID = maintenance.HistoryID,
-                machineID = maintenance.MachineID,
-                repairDetails = maintenance.RepairDetails,
-                completionDate = maintenance.CompletionDate
-            });
-        }
-      
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(MaintenanceHistory maintenance)
-        {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                TempData["ErrorMessage"] = string.Join("; ", errors);
-                var machines = await _context.Maintenancehistories.ToListAsync();
-                return View("MaintenanceAdminDshboard", machines);
-            }
-
             try
             {
-                var existingMachine = await _context.Maintenancehistories.FindAsync(maintenance.HistoryID);
-                if (existingMachine == null)
+                var maintenance = await _context.Maintenancehistories.FindAsync(id);
+                if (maintenance == null)
                 {
-                    TempData["ErrorMessage"] = "History not found.";
-                    return RedirectToAction(nameof(MaintenanceAdminDshboard));
+                    return Json(new { success = false, message = "Maintenance history not found." });
                 }
 
-                existingMachine.MachineID = maintenance.MachineID;
-                existingMachine.RepairDetails = maintenance.RepairDetails;
-                existingMachine.CompletionDate = maintenance.CompletionDate;
-              
-                _context.Maintenancehistories.Update(existingMachine);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "History updated successfully.";
+                return Json(new
+                {
+                    success = true,
+                    historyID = maintenance.HistoryID,
+                    machineID = maintenance.MachineID,
+                    repairDetails = maintenance.RepairDetails,
+                    completionDate = maintenance.CompletionDate?.ToString("yyyy-MM-ddTHH:mm")
+                });
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"Error updating History: {ex.Message}";
-                var machines = await _context.Maintenancehistories.ToListAsync();
-                return View("MaintenanceAdminDshboard", machines);
+                return Json(new { success = false, message = $"Error fetching maintenance history: {ex.Message}" });
             }
-
-            return RedirectToAction(nameof(MaintenanceAdminDshboard));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update([FromForm] MaintenanceHistory maintenance)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return Json(new { success = false, message = "Invalid data: " + string.Join("; ", errors) });
+                }
 
+                var existingMaintenance = await _context.Maintenancehistories.FindAsync(maintenance.HistoryID);
+                if (existingMaintenance == null)
+                {
+                    return Json(new { success = false, message = "Maintenance history not found." });
+                }
+
+                existingMaintenance.MachineID = maintenance.MachineID;
+                existingMaintenance.RepairDetails = maintenance.RepairDetails;
+                existingMaintenance.CompletionDate = maintenance.CompletionDate;
+
+                _context.Maintenancehistories.Update(existingMaintenance);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Maintenance history updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error updating maintenance history: {ex.Message}" });
+            }
+        }
     }
 }
